@@ -3,19 +3,10 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import {
-  doc,
-  getDoc,
-  updateDoc,
-  arrayUnion,
-  arrayRemove,
-  increment,
-} from 'firebase/firestore';
+import { doc, getDoc, updateDoc, arrayUnion, arrayRemove, increment } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { useAuth } from '@/contexts/AuthContext';
 import { Demand } from '@/types';
-import MessageBoard from '@/components/MessageBoard';
-import ShareButtons from '@/components/ShareButtons';
 
 export default function DemandDetailPage() {
   const params = useParams();
@@ -24,7 +15,6 @@ export default function DemandDetailPage() {
   const [demand, setDemand] = useState<Demand | null>(null);
   const [loading, setLoading] = useState(true);
   const [coSigning, setCoSigning] = useState(false);
-
   const demandId = params.id as string;
 
   useEffect(() => {
@@ -32,14 +22,8 @@ export default function DemandDetailPage() {
       try {
         const demandRef = doc(db, 'demands', demandId);
         const demandSnap = await getDoc(demandRef);
-
         if (demandSnap.exists()) {
-          setDemand({
-            id: demandSnap.id,
-            ...demandSnap.data(),
-            createdAt: demandSnap.data().createdAt?.toDate(),
-            updatedAt: demandSnap.data().updatedAt?.toDate(),
-          } as Demand);
+          setDemand({ id: demandSnap.id, ...demandSnap.data(), createdAt: demandSnap.data().createdAt?.toDate(), updatedAt: demandSnap.data().updatedAt?.toDate() } as Demand);
         } else {
           router.push('/demands');
         }
@@ -49,49 +33,24 @@ export default function DemandDetailPage() {
         setLoading(false);
       }
     };
-
     fetchDemand();
   }, [demandId, router]);
 
   const handleCoSign = async () => {
-    if (!user) {
-      router.push('/login');
-      return;
-    }
-
-    if (!demand) return;
-
+    if (!user || !demand) { router.push('/login'); return; }
     setCoSigning(true);
-
     try {
       const demandRef = doc(db, 'demands', demandId);
       const hasCoSigned = demand.coSigners?.includes(user.uid);
-
       if (hasCoSigned) {
-        // Remove co-signature
-        await updateDoc(demandRef, {
-          coSigners: arrayRemove(user.uid),
-          coSignCount: increment(-1),
-        });
-        setDemand({
-          ...demand,
-          coSigners: demand.coSigners.filter((id) => id !== user.uid),
-          coSignCount: (demand.coSignCount || 0) - 1,
-        });
+        await updateDoc(demandRef, { coSigners: arrayRemove(user.uid), coSignCount: increment(-1) });
+        setDemand({ ...demand, coSigners: demand.coSigners.filter((id) => id !== user.uid), coSignCount: (demand.coSignCount || 0) - 1 });
       } else {
-        // Add co-signature
-        await updateDoc(demandRef, {
-          coSigners: arrayUnion(user.uid),
-          coSignCount: increment(1),
-        });
-        setDemand({
-          ...demand,
-          coSigners: [...(demand.coSigners || []), user.uid],
-          coSignCount: (demand.coSignCount || 0) + 1,
-        });
+        await updateDoc(demandRef, { coSigners: arrayUnion(user.uid), coSignCount: increment(1) });
+        setDemand({ ...demand, coSigners: [...(demand.coSigners || []), user.uid], coSignCount: (demand.coSignCount || 0) + 1 });
       }
     } catch (error) {
-      console.error('Error co-signing demand:', error);
+      console.error('Error co-signing:', error);
     } finally {
       setCoSigning(false);
     }
@@ -99,160 +58,110 @@ export default function DemandDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50 flex items-center justify-center">
-        <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+      <div className="min-h-screen bg-surface-deep flex items-center justify-center">
+        <div className="animate-pulse text-text-muted">Loading...</div>
       </div>
     );
   }
-
-  if (!demand) {
-    return null;
-  }
+  if (!demand) return null;
 
   const hasCoSigned = user && demand.coSigners?.includes(user.uid);
   const isCreator = user && demand.creatorId === user.uid;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50">
-      <div className="container mx-auto px-4 py-8">
+    <div className="min-h-screen bg-surface-deep">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
-          <Link href="/" className="text-3xl font-bold text-[#00aaff]">
-            Demand
-          </Link>
-          <div className="space-x-4">
-            <Link href="/demands" className="text-gray-300 hover:text-[#00aaff]">
-              ← Back to Demands
-            </Link>
-            {user && (
-              <Link href="/dashboard" className="text-gray-300 hover:text-[#00aaff]">
-                Dashboard
-              </Link>
-            )}
+          <Link href="/" className="text-2xl font-bold text-brand">demand</Link>
+          <div className="flex items-center gap-4">
+            <Link href="/demands" className="text-text-secondary hover:text-text-primary text-sm transition-colors">← All Demands</Link>
+            {user && <Link href="/dashboard" className="text-text-secondary hover:text-text-primary text-sm transition-colors">Dashboard</Link>}
           </div>
         </div>
 
-        <div className="max-w-4xl mx-auto">
-          {/* Status Badge */}
-          <div className="mb-6">
-            <span
-              className={`inline-block px-6 py-2 rounded-full text-sm font-semibold ${
-                demand.status === 'active'
-                  ? 'bg-blue-100 text-blue-700'
-                  : demand.status === 'met'
-                  ? 'bg-green-100 text-green-700'
-                  : 'bg-[#1e1e1e] text-gray-300'
-              }`}
-            >
-              {demand.status === 'active'
-                ? 'Active Demand'
-                : demand.status === 'met'
-                ? 'Demand Won ✓'
-                : 'Closed'}
-            </span>
+        {/* Status */}
+        <div className="mb-6">
+          <span className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${
+            demand.status === 'active' ? 'bg-brand/10 text-brand border border-brand/20'
+            : demand.status === 'met' ? 'bg-success/10 text-success border border-success/20'
+            : 'bg-surface-overlay text-text-muted border border-border-default'
+          }`}>
+            {demand.status === 'active' ? 'Active Demand' : demand.status === 'met' ? 'Demand Won ✓' : 'Closed'}
+          </span>
+        </div>
+
+        {/* Title */}
+        <h1 className="text-3xl sm:text-4xl font-bold text-text-primary mb-3">{demand.title}</h1>
+        <p className="text-text-secondary mb-8">
+          Target: <span className="text-brand font-semibold">{demand.targetCompany}</span>
+        </p>
+
+        {/* Co-Sign Button */}
+        {!isCreator && (
+          <button
+            onClick={handleCoSign}
+            disabled={coSigning || !user}
+            className={`mb-8 px-8 py-3 rounded-xl font-semibold text-base transition-all disabled:opacity-50 ${
+              hasCoSigned
+                ? 'bg-surface-raised border border-border-default text-text-secondary hover:border-danger hover:text-danger'
+                : 'bg-brand hover:bg-brand-dark text-white hover:shadow-lg hover:shadow-brand/30'
+            }`}
+          >
+            {coSigning ? 'Processing...' : hasCoSigned ? 'Remove Co-Signature' : '✊ Co-Sign This Demand'}
+          </button>
+        )}
+
+        {/* Stats */}
+        <div className="grid grid-cols-3 gap-4 mb-8">
+          <div className="bg-surface-raised border border-border-subtle rounded-xl p-5 text-center">
+            <div className="text-3xl font-bold text-brand">{demand.coSignCount || 0}</div>
+            <div className="text-text-muted text-xs mt-1 uppercase tracking-wider">Co-Signers</div>
           </div>
+          <div className="bg-surface-raised border border-border-subtle rounded-xl p-5 text-center">
+            <div className="text-3xl font-bold text-text-primary">
+              {demand.createdAt ? Math.floor((Date.now() - demand.createdAt.getTime()) / (1000 * 60 * 60 * 24)) : 0}
+            </div>
+            <div className="text-text-muted text-xs mt-1 uppercase tracking-wider">Days Active</div>
+          </div>
+          <div className="bg-surface-raised border border-border-subtle rounded-xl p-5 text-center">
+            <div className="text-3xl">{demand.status === 'active' ? '🔥' : demand.status === 'met' ? '✅' : '🔒'}</div>
+            <div className="text-text-muted text-xs mt-1 uppercase tracking-wider">Status</div>
+          </div>
+        </div>
 
-          {/* Title & Company */}
-          <h1 className="text-5xl font-bold text-gray-100 mb-4">{demand.title}</h1>
-          <p className="text-xl text-gray-400 mb-8">
-            Target: <span className="font-semibold text-[#00aaff]">{demand.targetCompany}</span>
-          </p>
+        {/* Description */}
+        <div className="bg-surface-raised border border-border-subtle rounded-xl p-6 mb-6">
+          <h2 className="text-sm font-medium text-text-muted uppercase tracking-wider mb-3">The Demand</h2>
+          <p className="text-text-primary whitespace-pre-wrap leading-relaxed">{demand.description}</p>
+        </div>
 
-          {/* Co-Sign Button */}
-          {!isCreator && (
-            <button
-              onClick={handleCoSign}
-              disabled={coSigning || !user}
-              className={`mb-8 px-8 py-4 rounded-lg font-semibold text-lg transition disabled:opacity-50 disabled:cursor-not-allowed ${
-                hasCoSigned
-                  ? 'bg-gray-200 text-gray-300 hover:bg-gray-300'
-                  : 'bg-[#00aaff] text-white hover:bg-[#0088cc]'
-              }`}
-            >
-              {coSigning
-                ? 'Processing...'
-                : hasCoSigned
-                ? 'Remove Co-Signature'
-                : 'Co-Sign This Demand'}
-            </button>
-          )}
+        {/* Success Criteria */}
+        <div className="bg-surface-raised border border-brand/20 rounded-xl p-6 mb-6">
+          <h2 className="text-sm font-medium text-brand uppercase tracking-wider mb-3">Success Criteria</h2>
+          <p className="text-text-primary whitespace-pre-wrap leading-relaxed">{demand.successCriteria}</p>
+        </div>
 
-          {/* Stats */}
-          <div className="bg-[#1a1a1a] p-6 rounded-xl shadow-md mb-8">
-            <div className="grid grid-cols-3 gap-6 text-center">
-              <div>
-                <div className="text-4xl font-bold text-[#00aaff]">
-                  {demand.coSignCount || 0}
-                </div>
-                <div className="text-gray-400 mt-1">Co-Signers</div>
-              </div>
-              <div>
-                <div className="text-4xl font-bold text-gray-100">
-                  {demand.createdAt
-                    ? Math.floor(
-                        (Date.now() - demand.createdAt.getTime()) / (1000 * 60 * 60 * 24)
-                      )
-                    : 0}
-                </div>
-                <div className="text-gray-400 mt-1">Days Active</div>
-              </div>
-              <div>
-                <div className="text-4xl font-bold text-gray-100">
-                  {demand.status === 'active' ? '🔥' : demand.status === 'met' ? '✅' : '🔒'}
-                </div>
-                <div className="text-gray-400 mt-1">Status</div>
+        {/* Creator */}
+        <div className="bg-surface-raised border border-border-subtle rounded-xl p-6 mb-6">
+          <div className="flex justify-between items-center">
+            <div>
+              <div className="text-xs text-text-muted uppercase tracking-wider mb-1">Created by</div>
+              <div className="text-text-primary font-medium">{demand.creatorName}</div>
+            </div>
+            <div className="text-right">
+              <div className="text-xs text-text-muted uppercase tracking-wider mb-1">Created</div>
+              <div className="text-text-primary font-medium">
+                {demand.createdAt ? new Date(demand.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'Unknown'}
               </div>
             </div>
           </div>
+        </div>
 
-          {/* Description */}
-          <div className="bg-[#1a1a1a] p-8 rounded-xl shadow-md mb-8">
-            <h2 className="text-2xl font-bold text-gray-100 mb-4">The Demand</h2>
-            <p className="text-gray-300 whitespace-pre-wrap leading-relaxed">
-              {demand.description}
-            </p>
-          </div>
-
-          {/* Success Criteria */}
-          <div className="bg-[#1a1a1a] p-8 rounded-xl shadow-md mb-8">
-            <h2 className="text-2xl font-bold text-gray-100 mb-4">Success Criteria</h2>
-            <p className="text-gray-300 whitespace-pre-wrap leading-relaxed">
-              {demand.successCriteria}
-            </p>
-          </div>
-
-          {/* Share Buttons */}
-          <ShareButtons
-            title={`${demand.title} - Target: ${demand.targetCompany}`}
-            url={typeof window !== 'undefined' ? window.location.href : ''}
-          />
-
-          {/* Creator Info */}
-          <div className="bg-[#1a1a1a] p-6 rounded-xl shadow-md mb-8">
-            <div className="flex justify-between items-center">
-              <div>
-                <p className="text-sm text-gray-500 mb-1">Created by</p>
-                <p className="text-lg font-semibold text-gray-100">{demand.creatorName}</p>
-              </div>
-              <div className="text-right">
-                <p className="text-sm text-gray-500 mb-1">Created on</p>
-                <p className="text-lg font-semibold text-gray-100">
-                  {demand.createdAt
-                    ? new Date(demand.createdAt).toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
-                      })
-                    : 'Unknown'}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Message Board */}
-          <div className="bg-[#1a1a1a] p-8 rounded-xl shadow-md">
-            <MessageBoard demandId={demandId} />
-          </div>
+        {/* Discussion Placeholder */}
+        <div className="bg-surface-raised border border-border-subtle rounded-xl p-6">
+          <h2 className="text-sm font-medium text-text-muted uppercase tracking-wider mb-3">Discussion</h2>
+          <p className="text-text-muted text-sm text-center py-8">Message board coming soon.</p>
         </div>
       </div>
     </div>

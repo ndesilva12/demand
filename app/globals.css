@@ -1,26 +1,78 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #00aaff;
-  --color-primary-dark: #0088cc;
-  --color-primary-light: #33bbff;
+  /* Brand Colors */
+  --color-brand: #00aaff;
+  --color-brand-dark: #0088cc;
+  --color-brand-light: #33bbff;
+  --color-brand-glow: rgba(0, 170, 255, 0.15);
+  --color-brand-glow-strong: rgba(0, 170, 255, 0.3);
+
+  /* Surface Colors */
+  --color-surface-deep: #0a0a0a;
+  --color-surface-base: #111111;
+  --color-surface-raised: #1a1a1a;
+  --color-surface-overlay: #222222;
+  --color-surface-hover: #2a2a2a;
+
+  /* Text Colors */
+  --color-text-primary: #f0f0f0;
+  --color-text-secondary: #a0a0a0;
+  --color-text-muted: #666666;
+
+  /* Border Colors */
+  --color-border-subtle: #1e1e1e;
+  --color-border-default: #2a2a2a;
+  --color-border-strong: #3a3a3a;
+
+  /* Status Colors */
+  --color-success: #22c55e;
+  --color-success-dark: #16a34a;
+  --color-danger: #ef4444;
+  --color-danger-dark: #dc2626;
+  --color-warning: #f59e0b;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 body {
-  background-color: #0a0a0a;
-  color: #e0e0e0;
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-surface-deep);
+  color: var(--color-text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Dark theme input styling */
+/* Form Elements */
 input, textarea, select {
-  background-color: #1a1a1a;
-  color: #e0e0e0;
-  border-color: #333;
+  background-color: var(--color-surface-raised);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border-default);
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  transition: all 0.2s ease;
 }
 
 input:focus, textarea:focus, select:focus {
-  border-color: #00aaff;
+  border-color: var(--color-brand);
   outline: none;
-  box-shadow: 0 0 0 2px rgba(0, 170, 255, 0.3);
+  box-shadow: 0 0 0 3px var(--color-brand-glow);
+}
+
+input::placeholder, textarea::placeholder {
+  color: var(--color-text-muted);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--color-surface-base); }
+::-webkit-scrollbar-thumb { background: var(--color-border-strong); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-brand); }
+
+/* Selection */
+::selection {
+  background-color: var(--color-brand-glow-strong);
+  color: var(--color-text-primary);
 }

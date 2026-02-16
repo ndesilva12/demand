@@ -30,181 +30,120 @@ export default function DemandsPage() {
         setLoading(false);
       }
     };
-
     fetchDemands();
   }, []);
 
   const filteredDemands = demands.filter((demand) => {
-    // Filter by visibility
-    if (demand.visibility !== 'public') return false;
-
-    // Filter by status
-    if (filter !== 'all' && demand.status !== filter) return false;
-
-    // Filter by search query
-    if (searchQuery) {
-      const query = searchQuery.toLowerCase();
-      return (
-        demand.title.toLowerCase().includes(query) ||
-        demand.description.toLowerCase().includes(query) ||
-        demand.targetCompany.toLowerCase().includes(query)
-      );
-    }
-
-    return true;
+    const matchesFilter = filter === 'all' || demand.status === filter;
+    const matchesSearch = searchQuery === '' || 
+      demand.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      demand.targetCompany.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesFilter && matchesSearch && demand.visibility === 'public';
   });
 
+  const filters = [
+    { key: 'all', label: 'All' },
+    { key: 'active', label: 'Active' },
+    { key: 'met', label: 'Won' },
+    { key: 'closed', label: 'Closed' },
+  ];
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50">
-      <div className="container mx-auto px-4 py-8">
+    <div className="min-h-screen bg-surface-deep">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
-          <div>
-            <Link href="/" className="text-3xl font-bold text-[#00aaff]">
-              Demand
-            </Link>
-          </div>
-          <div className="space-x-4">
-            <Link href="/dashboard" className="text-gray-300 hover:text-[#00aaff]">
-              Dashboard
-            </Link>
-            <Link
-              href="/create"
-              className="bg-[#00aaff] text-white px-6 py-2 rounded-lg hover:bg-[#0088cc] transition"
-            >
-              Create Demand
+          <Link href="/" className="text-2xl font-bold text-brand">demand</Link>
+          <div className="flex items-center gap-4">
+            <Link href="/dashboard" className="text-text-secondary hover:text-text-primary text-sm transition-colors">Dashboard</Link>
+            <Link href="/create" className="bg-brand hover:bg-brand-dark text-white px-5 py-2 rounded-lg text-sm font-medium transition-all">
+              + New Demand
             </Link>
           </div>
         </div>
 
-        <h1 className="text-4xl font-bold text-gray-100 mb-4">Browse Demands</h1>
-        <p className="text-gray-400 mb-8">
-          Explore active demands and co-sign those you support.
-        </p>
-
-        {/* Search Bar */}
-        <div className="mb-6">
+        {/* Title & Search */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-text-primary mb-2">Demands</h1>
+          <p className="text-text-secondary text-sm mb-6">Explore active demands and co-sign those you support.</p>
           <input
             type="text"
-            placeholder="Search demands by title, company, or description..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full px-6 py-3 border-2 border-gray-800 rounded-lg focus:border-purple-500 focus:outline-none transition text-lg"
+            className="w-full max-w-md"
+            placeholder="Search demands or companies..."
           />
         </div>
 
         {/* Filters */}
-        <div className="flex gap-4 mb-8">
-          <button
-            onClick={() => setFilter('all')}
-            className={`px-6 py-2 rounded-lg font-semibold transition ${
-              filter === 'all'
-                ? 'bg-[#00aaff] text-white'
-                : 'bg-[#1a1a1a] text-gray-300 hover:bg-[#0a0a0a] border border-gray-700'
-            }`}
-          >
-            All
-          </button>
-          <button
-            onClick={() => setFilter('active')}
-            className={`px-6 py-2 rounded-lg font-semibold transition ${
-              filter === 'active'
-                ? 'bg-[#00aaff] text-white'
-                : 'bg-[#1a1a1a] text-gray-300 hover:bg-[#0a0a0a] border border-gray-700'
-            }`}
-          >
-            Active
-          </button>
-          <button
-            onClick={() => setFilter('met')}
-            className={`px-6 py-2 rounded-lg font-semibold transition ${
-              filter === 'met'
-                ? 'bg-[#00aaff] text-white'
-                : 'bg-[#1a1a1a] text-gray-300 hover:bg-[#0a0a0a] border border-gray-700'
-            }`}
-          >
-            Won
-          </button>
+        <div className="flex gap-2 mb-8">
+          {filters.map((f) => (
+            <button
+              key={f.key}
+              onClick={() => setFilter(f.key)}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                filter === f.key
+                  ? 'bg-brand text-white'
+                  : 'bg-surface-raised text-text-secondary hover:text-text-primary border border-border-subtle hover:border-border-default'
+              }`}
+            >
+              {f.label}
+            </button>
+          ))}
         </div>
 
         {/* Demands List */}
         {loading ? (
-          <div className="text-center py-12">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
-            <p className="mt-4 text-gray-400">Loading demands...</p>
+          <div className="space-y-4">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="bg-surface-raised border border-border-subtle rounded-xl p-6 animate-pulse">
+                <div className="h-5 bg-surface-overlay rounded w-3/4 mb-3"></div>
+                <div className="h-3 bg-surface-overlay rounded w-1/4 mb-4"></div>
+                <div className="h-3 bg-surface-overlay rounded w-full"></div>
+              </div>
+            ))}
           </div>
         ) : filteredDemands.length === 0 ? (
-          <div className="bg-[#1a1a1a] rounded-xl p-12 text-center shadow-md">
-            <div className="text-6xl mb-4">📭</div>
-            <h3 className="text-2xl font-bold text-gray-100 mb-2">No demands yet</h3>
-            <p className="text-gray-400 mb-6">Be the first to create a demand!</p>
-            <Link
-              href="/create"
-              className="inline-block bg-[#00aaff] text-white px-8 py-3 rounded-lg font-semibold hover:bg-[#0088cc] transition"
-            >
-              Create First Demand
+          <div className="bg-surface-raised border border-border-subtle rounded-xl p-12 text-center">
+            <div className="text-4xl mb-4">📭</div>
+            <h3 className="text-xl font-bold text-text-primary mb-2">No demands found</h3>
+            <p className="text-text-secondary mb-6 text-sm">Be the first to create one.</p>
+            <Link href="/create" className="bg-brand hover:bg-brand-dark text-white px-6 py-3 rounded-lg font-semibold transition-all inline-block">
+              Create Demand
             </Link>
           </div>
         ) : (
-          <div className="grid gap-6">
+          <div className="space-y-4">
             {filteredDemands.map((demand) => (
               <Link
                 key={demand.id}
                 href={`/demands/${demand.id}`}
-                className="bg-[#1a1a1a] p-6 rounded-xl shadow-md hover:shadow-lg transition block"
+                className="block bg-surface-raised border border-border-subtle rounded-xl p-6 hover:border-brand/30 transition-all group"
               >
                 <div className="flex justify-between items-start mb-3">
-                  <div className="flex-1">
-                    <h3 className="text-xl font-bold text-gray-100 mb-2">
+                  <div className="flex-1 mr-4">
+                    <h3 className="text-lg font-bold text-text-primary group-hover:text-brand transition-colors">
                       {demand.title}
                     </h3>
-                    <p className="text-sm text-gray-500">
-                      Target:{' '}
-                      <Link
-                        href={`/companies/${encodeURIComponent(demand.targetCompany)}`}
-                        className="font-semibold text-[#00aaff] hover:underline"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        {demand.targetCompany}
-                      </Link>
+                    <p className="text-xs text-text-muted mt-1">
+                      Target: <span className="text-brand font-medium">{demand.targetCompany}</span>
                     </p>
                   </div>
-                  <div
-                    className={`px-4 py-1 rounded-full text-sm font-semibold ${
-                      demand.status === 'active'
-                        ? 'bg-blue-100 text-blue-700'
-                        : demand.status === 'met'
-                        ? 'bg-green-100 text-green-700'
-                        : 'bg-[#1e1e1e] text-gray-300'
-                    }`}
-                  >
-                    {demand.status === 'active'
-                      ? 'Active'
-                      : demand.status === 'met'
-                      ? 'Won ✓'
-                      : 'Closed'}
-                  </div>
+                  <span className={`px-3 py-1 rounded-full text-xs font-medium shrink-0 ${
+                    demand.status === 'active' ? 'bg-brand/10 text-brand border border-brand/20'
+                    : demand.status === 'met' ? 'bg-success/10 text-success border border-success/20'
+                    : 'bg-surface-overlay text-text-muted border border-border-default'
+                  }`}>
+                    {demand.status === 'active' ? 'Active' : demand.status === 'met' ? 'Won' : 'Closed'}
+                  </span>
                 </div>
-
-                <p className="text-gray-400 mb-4 line-clamp-2">{demand.description}</p>
-
-                <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-                  <div className="flex items-center gap-6 text-sm text-gray-500">
-                    <div>
-                      <span className="font-semibold text-[#00aaff]">
-                        {demand.coSignCount || 0}
-                      </span>{' '}
-                      co-signers
-                    </div>
-                    <div>
-                      By <span className="font-semibold">{demand.creatorName}</span>
-                    </div>
+                <p className="text-text-secondary text-sm line-clamp-2 mb-4">{demand.description}</p>
+                <div className="flex items-center justify-between text-xs text-text-muted">
+                  <div className="flex items-center gap-4">
+                    <span><span className="text-brand font-semibold">{demand.coSignCount || 0}</span> co-signers</span>
+                    <span>By {demand.creatorName}</span>
                   </div>
-                  <div className="text-sm text-gray-400">
-                    {demand.createdAt
-                      ? new Date(demand.createdAt).toLocaleDateString()
-                      : 'Unknown date'}
-                  </div>
+                  <span>{demand.createdAt ? new Date(demand.createdAt).toLocaleDateString() : ''}</span>
                 </div>
               </Link>
             ))}

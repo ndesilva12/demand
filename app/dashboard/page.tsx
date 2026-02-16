@@ -15,251 +15,112 @@ export default function DashboardPage() {
   const [coSignedDemands, setCoSignedDemands] = useState<Demand[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (!authLoading && !user) {
-      router.push('/login');
-    }
-  }, [user, authLoading, router]);
+  useEffect(() => { if (!authLoading && !user) router.push('/login'); }, [user, authLoading, router]);
 
   useEffect(() => {
     const fetchDemands = async () => {
       if (!user) return;
-
       try {
-        // Fetch demands created by user
-        const myDemandsQuery = query(
-          collection(db, 'demands'),
-          where('creatorId', '==', user.uid),
-          orderBy('createdAt', 'desc')
-        );
-        const myDemandsSnap = await getDocs(myDemandsQuery);
-        const myDemandsData = myDemandsSnap.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-          createdAt: doc.data().createdAt?.toDate(),
-          updatedAt: doc.data().updatedAt?.toDate(),
-        })) as Demand[];
-        setMyDemands(myDemandsData);
+        const myQ = query(collection(db, 'demands'), where('creatorId', '==', user.uid), orderBy('createdAt', 'desc'));
+        const mySnap = await getDocs(myQ);
+        setMyDemands(mySnap.docs.map((doc) => ({ id: doc.id, ...doc.data(), createdAt: doc.data().createdAt?.toDate(), updatedAt: doc.data().updatedAt?.toDate() })) as Demand[]);
 
-        // Fetch demands co-signed by user
-        const coSignedQuery = query(
-          collection(db, 'demands'),
-          where('coSigners', 'array-contains', user.uid)
-        );
-        const coSignedSnap = await getDocs(coSignedQuery);
-        const coSignedData = coSignedSnap.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-          createdAt: doc.data().createdAt?.toDate(),
-          updatedAt: doc.data().updatedAt?.toDate(),
-        })) as Demand[];
-        setCoSignedDemands(coSignedData);
+        const coQ = query(collection(db, 'demands'), where('coSigners', 'array-contains', user.uid));
+        const coSnap = await getDocs(coQ);
+        setCoSignedDemands(coSnap.docs.map((doc) => ({ id: doc.id, ...doc.data(), createdAt: doc.data().createdAt?.toDate(), updatedAt: doc.data().updatedAt?.toDate() })) as Demand[]);
       } catch (error) {
         console.error('Error fetching demands:', error);
       } finally {
         setLoading(false);
       }
     };
-
     fetchDemands();
   }, [user]);
 
-  const handleSignOut = async () => {
-    await signOut();
-    router.push('/');
-  };
-
   if (authLoading || !user) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50 flex items-center justify-center">
-        <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
-      </div>
-    );
+    return <div className="min-h-screen bg-surface-deep flex items-center justify-center"><div className="text-text-muted">Loading...</div></div>;
   }
 
+  const DemandCard = ({ demand }: { demand: Demand }) => (
+    <Link href={`/demands/${demand.id}`} className="block bg-surface-raised border border-border-subtle rounded-xl p-5 hover:border-brand/30 transition-all group">
+      <div className="flex justify-between items-start">
+        <div className="flex-1 mr-4">
+          <h3 className="font-bold text-text-primary group-hover:text-brand transition-colors text-sm">{demand.title}</h3>
+          <p className="text-xs text-text-muted mt-1">Target: {demand.targetCompany}</p>
+          <div className="flex items-center gap-3 mt-2 text-xs text-text-muted">
+            <span><span className="text-brand font-semibold">{demand.coSignCount || 0}</span> co-signers</span>
+            <span>{demand.createdAt ? new Date(demand.createdAt).toLocaleDateString() : ''}</span>
+          </div>
+        </div>
+        <span className={`px-2.5 py-1 rounded-full text-xs font-medium shrink-0 ${
+          demand.status === 'active' ? 'bg-brand/10 text-brand' : demand.status === 'met' ? 'bg-success/10 text-success' : 'bg-surface-overlay text-text-muted'
+        }`}>
+          {demand.status === 'active' ? 'Active' : demand.status === 'met' ? 'Won' : 'Closed'}
+        </span>
+      </div>
+    </Link>
+  );
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50">
-      <div className="container mx-auto px-4 py-8">
+    <div className="min-h-screen bg-surface-deep">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
-          <Link href="/" className="text-3xl font-bold text-[#00aaff]">
-            Demand
-          </Link>
+          <Link href="/" className="text-2xl font-bold text-brand">demand</Link>
           <div className="flex items-center gap-4">
-            <Link href="/demands" className="text-gray-300 hover:text-[#00aaff]">
-              Browse Demands
-            </Link>
-            <Link
-              href="/create"
-              className="bg-[#00aaff] text-white px-6 py-2 rounded-lg hover:bg-[#0088cc] transition"
-            >
-              Create Demand
-            </Link>
-            <button
-              onClick={handleSignOut}
-              className="text-gray-300 hover:text-red-600"
-            >
-              Sign Out
-            </button>
+            <Link href="/demands" className="text-text-secondary hover:text-text-primary text-sm transition-colors">Browse</Link>
+            <Link href="/create" className="bg-brand hover:bg-brand-dark text-white px-5 py-2 rounded-lg text-sm font-medium transition-all">+ New Demand</Link>
+            <button onClick={async () => { await signOut(); router.push('/'); }} className="text-text-muted hover:text-danger text-sm transition-colors">Sign Out</button>
           </div>
         </div>
 
-        <div className="max-w-6xl mx-auto">
-          <div className="mb-8">
-            <h1 className="text-4xl font-bold text-gray-100 mb-2">Dashboard</h1>
-            <p className="text-gray-400">Welcome back, {user.email}</p>
-          </div>
+        <h1 className="text-3xl font-bold text-text-primary mb-1">Dashboard</h1>
+        <p className="text-text-secondary text-sm mb-8">{user.email}</p>
 
-          {/* Stats */}
-          <div className="grid md:grid-cols-3 gap-6 mb-12">
-            <div className="bg-[#1a1a1a] p-6 rounded-xl shadow-md">
-              <div className="text-3xl font-bold text-[#00aaff]">
-                {myDemands.length}
-              </div>
-              <div className="text-gray-400 mt-1">Demands Created</div>
-            </div>
-            <div className="bg-[#1a1a1a] p-6 rounded-xl shadow-md">
-              <div className="text-3xl font-bold text-[#00aaff]">
-                {coSignedDemands.length}
-              </div>
-              <div className="text-gray-400 mt-1">Demands Co-Signed</div>
-            </div>
-            <div className="bg-[#1a1a1a] p-6 rounded-xl shadow-md">
-              <div className="text-3xl font-bold text-green-600">
-                {myDemands.filter((d) => d.status === 'met').length}
-              </div>
-              <div className="text-gray-400 mt-1">Demands Won</div>
-            </div>
+        {/* Stats */}
+        <div className="grid grid-cols-3 gap-4 mb-10">
+          <div className="bg-surface-raised border border-border-subtle rounded-xl p-5 text-center">
+            <div className="text-2xl font-bold text-brand">{myDemands.length}</div>
+            <div className="text-text-muted text-xs mt-1 uppercase tracking-wider">Created</div>
           </div>
+          <div className="bg-surface-raised border border-border-subtle rounded-xl p-5 text-center">
+            <div className="text-2xl font-bold text-brand">{coSignedDemands.length}</div>
+            <div className="text-text-muted text-xs mt-1 uppercase tracking-wider">Co-Signed</div>
+          </div>
+          <div className="bg-surface-raised border border-border-subtle rounded-xl p-5 text-center">
+            <div className="text-2xl font-bold text-success">{myDemands.filter((d) => d.status === 'met').length}</div>
+            <div className="text-text-muted text-xs mt-1 uppercase tracking-wider">Won</div>
+          </div>
+        </div>
 
-          {/* My Demands */}
-          <div className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-100 mb-6">My Demands</h2>
-            {loading ? (
-              <div className="text-center py-8">
-                <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
-              </div>
-            ) : myDemands.length === 0 ? (
-              <div className="bg-[#1a1a1a] p-8 rounded-xl shadow-md text-center">
-                <p className="text-gray-400 mb-4">You haven&apos;t created any demands yet.</p>
-                <Link
-                  href="/create"
-                  className="inline-block bg-[#00aaff] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#0088cc] transition"
-                >
-                  Create Your First Demand
-                </Link>
-              </div>
-            ) : (
-              <div className="grid gap-4">
-                {myDemands.map((demand) => (
-                  <Link
-                    key={demand.id}
-                    href={`/demands/${demand.id}`}
-                    className="bg-[#1a1a1a] p-6 rounded-xl shadow-md hover:shadow-lg transition block"
-                  >
-                    <div className="flex justify-between items-start">
-                      <div className="flex-1">
-                        <h3 className="text-xl font-bold text-gray-100 mb-2">
-                          {demand.title}
-                        </h3>
-                        <p className="text-sm text-gray-500 mb-3">
-                          Target: {demand.targetCompany}
-                        </p>
-                        <div className="flex items-center gap-4 text-sm text-gray-400">
-                          <span className="font-semibold text-[#00aaff]">
-                            {demand.coSignCount || 0} co-signers
-                          </span>
-                          <span>
-                            {demand.createdAt
-                              ? new Date(demand.createdAt).toLocaleDateString()
-                              : ''}
-                          </span>
-                        </div>
-                      </div>
-                      <span
-                        className={`px-4 py-1 rounded-full text-sm font-semibold ${
-                          demand.status === 'active'
-                            ? 'bg-blue-100 text-blue-700'
-                            : demand.status === 'met'
-                            ? 'bg-green-100 text-green-700'
-                            : 'bg-[#1e1e1e] text-gray-300'
-                        }`}
-                      >
-                        {demand.status === 'active'
-                          ? 'Active'
-                          : demand.status === 'met'
-                          ? 'Won'
-                          : 'Closed'}
-                      </span>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            )}
-          </div>
+        {/* My Demands */}
+        <div className="mb-10">
+          <h2 className="text-lg font-bold text-text-primary mb-4">My Demands</h2>
+          {loading ? (
+            <div className="animate-pulse bg-surface-raised rounded-xl h-20"></div>
+          ) : myDemands.length === 0 ? (
+            <div className="bg-surface-raised border border-border-subtle rounded-xl p-8 text-center">
+              <p className="text-text-muted text-sm mb-4">No demands yet.</p>
+              <Link href="/create" className="bg-brand hover:bg-brand-dark text-white px-5 py-2 rounded-lg text-sm font-medium transition-all inline-block">Create One</Link>
+            </div>
+          ) : (
+            <div className="space-y-3">{myDemands.map((d) => <DemandCard key={d.id} demand={d} />)}</div>
+          )}
+        </div>
 
-          {/* Co-Signed Demands */}
-          <div>
-            <h2 className="text-2xl font-bold text-gray-100 mb-6">Demands I Support</h2>
-            {loading ? (
-              <div className="text-center py-8">
-                <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
-              </div>
-            ) : coSignedDemands.length === 0 ? (
-              <div className="bg-[#1a1a1a] p-8 rounded-xl shadow-md text-center">
-                <p className="text-gray-400 mb-4">
-                  You haven&apos;t co-signed any demands yet.
-                </p>
-                <Link
-                  href="/demands"
-                  className="inline-block bg-[#00aaff] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#0088cc] transition"
-                >
-                  Browse Demands
-                </Link>
-              </div>
-            ) : (
-              <div className="grid gap-4">
-                {coSignedDemands.map((demand) => (
-                  <Link
-                    key={demand.id}
-                    href={`/demands/${demand.id}`}
-                    className="bg-[#1a1a1a] p-6 rounded-xl shadow-md hover:shadow-lg transition block"
-                  >
-                    <div className="flex justify-between items-start">
-                      <div className="flex-1">
-                        <h3 className="text-xl font-bold text-gray-100 mb-2">
-                          {demand.title}
-                        </h3>
-                        <p className="text-sm text-gray-500 mb-3">
-                          Target: {demand.targetCompany} • By {demand.creatorName}
-                        </p>
-                        <div className="flex items-center gap-4 text-sm text-gray-400">
-                          <span className="font-semibold text-[#00aaff]">
-                            {demand.coSignCount || 0} co-signers
-                          </span>
-                        </div>
-                      </div>
-                      <span
-                        className={`px-4 py-1 rounded-full text-sm font-semibold ${
-                          demand.status === 'active'
-                            ? 'bg-blue-100 text-blue-700'
-                            : demand.status === 'met'
-                            ? 'bg-green-100 text-green-700'
-                            : 'bg-[#1e1e1e] text-gray-300'
-                        }`}
-                      >
-                        {demand.status === 'active'
-                          ? 'Active'
-                          : demand.status === 'met'
-                          ? 'Won'
-                          : 'Closed'}
-                      </span>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            )}
-          </div>
+        {/* Co-Signed */}
+        <div>
+          <h2 className="text-lg font-bold text-text-primary mb-4">Demands I Support</h2>
+          {loading ? (
+            <div className="animate-pulse bg-surface-raised rounded-xl h-20"></div>
+          ) : coSignedDemands.length === 0 ? (
+            <div className="bg-surface-raised border border-border-subtle rounded-xl p-8 text-center">
+              <p className="text-text-muted text-sm mb-4">No co-signed demands.</p>
+              <Link href="/demands" className="bg-brand hover:bg-brand-dark text-white px-5 py-2 rounded-lg text-sm font-medium transition-all inline-block">Browse Demands</Link>
+            </div>
+          ) : (
+            <div className="space-y-3">{coSignedDemands.map((d) => <DemandCard key={d.id} demand={d} />)}</div>
+          )}
         </div>
       </div>
     </div>

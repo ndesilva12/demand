@@ -17,118 +17,69 @@ export default function LoginPage() {
     e.preventDefault();
     setError('');
     setLoading(true);
-
     try {
       await signIn(email, password);
       router.push('/dashboard');
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError('Failed to sign in');
-      }
+      setError(err instanceof Error ? err.message : 'Failed to sign in');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center px-4 animate-fadeIn">
-      <div className="bg-gray-800 p-8 rounded-2xl shadow-2xl max-w-md w-full border border-gray-700 hover-lift">
+    <div className="min-h-screen bg-surface-deep flex items-center justify-center px-4">
+      <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-[#00aaff]">Welcome Back</h1>
-          <p className="text-gray-400 mt-2">Sign in to your Demand account</p>
+          <Link href="/" className="text-2xl font-bold text-brand">demand</Link>
+          <h1 className="text-xl font-bold text-text-primary mt-6">Welcome back</h1>
+          <p className="text-text-secondary text-sm mt-2">Sign in to continue</p>
         </div>
 
         {error && (
-          <div className="bg-red-900 bg-opacity-20 text-red-400 p-4 rounded-lg mb-6 border border-red-800">
+          <div className="bg-danger/10 border border-danger/20 text-danger rounded-lg p-3 mb-6 text-sm">
             {error}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              Email
-            </label>
+            <label className="block text-xs font-medium text-text-secondary mb-1.5 uppercase tracking-wider">Email</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg"
+              className="w-full"
               placeholder="you@example.com"
               required
             />
           </div>
-
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              Password
-            </label>
+            <label className="block text-xs font-medium text-text-secondary mb-1.5 uppercase tracking-wider">Password</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg"
+              className="w-full"
               placeholder="••••••••"
               required
             />
-            <div className="flex justify-between items-center mt-2">
-              <Link 
-                href="/forgot-password" 
-                className="text-xs text-[#00aaff] hover:underline"
-              >
-                Forgot password?
-              </Link>
-            </div>
           </div>
-
           <button
             type="submit"
             disabled={loading}
-            className="w-full btn-primary py-3 rounded-lg text-lg font-semibold"
+            className="w-full bg-brand hover:bg-brand-dark text-white py-3 rounded-lg font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed mt-2"
           >
             {loading ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
 
-        <div className="mt-6 text-center">
-          <div className="flex items-center my-4">
-            <div className="flex-grow border-t border-gray-700"></div>
-            <span className="px-4 text-gray-500 text-sm">Or continue with</span>
-            <div className="flex-grow border-t border-gray-700"></div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4 mt-4">
-            <button className="btn-secondary py-2 flex items-center justify-center">
-              <img 
-                src="/icons/google.svg" 
-                alt="Google" 
-                className="w-5 h-5 mr-2" 
-              />
-              Google
-            </button>
-            <button className="btn-secondary py-2 flex items-center justify-center">
-              <img 
-                src="/icons/github.svg" 
-                alt="GitHub" 
-                className="w-5 h-5 mr-2" 
-              />
-              GitHub
-            </button>
-          </div>
-        </div>
-
-        <div className="mt-6 text-center">
-          <p className="text-gray-400">
-            Don't have an account?{' '}
-            <Link 
-              href="/signup" 
-              className="text-[#00aaff] hover:underline font-semibold"
-            >
-              Sign up
-            </Link>
-          </p>
+        <p className="text-center text-text-secondary text-sm mt-6">
+          No account?{' '}
+          <Link href="/signup" className="text-brand hover:text-brand-light font-medium">Sign up</Link>
+        </p>
+        <div className="text-center mt-4">
+          <Link href="/" className="text-text-muted hover:text-text-secondary text-xs">← Home</Link>
         </div>
       </div>
     </div>
