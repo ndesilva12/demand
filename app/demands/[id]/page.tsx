@@ -62,8 +62,8 @@ export default function DemandDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-surface-deep flex items-center justify-center">
-        <div className="animate-pulse text-text-muted">Loading...</div>
+      <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
+        <div className="animate-pulse text-[#666666]">Loading...</div>
       </div>
     );
   }
@@ -73,32 +73,32 @@ export default function DemandDetailPage() {
   const isCreator = user && demand.creatorId === user.uid;
 
   return (
-    <div className="min-h-screen bg-surface-deep">
+    <div className="min-h-screen bg-[#0a0a0a]">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
-          <Link href="/" className="text-2xl font-bold text-brand">demand</Link>
+          <Link href="/" className="text-2xl font-bold text-[#00aaff]">demand</Link>
           <div className="flex items-center gap-4">
-            <Link href="/demands" className="text-text-secondary hover:text-text-primary text-sm transition-colors">← All Demands</Link>
-            {user && <Link href="/dashboard" className="text-text-secondary hover:text-text-primary text-sm transition-colors">Dashboard</Link>}
+            <Link href="/demands" className="text-[#a0a0a0] hover:text-white text-sm transition-colors">← All Demands</Link>
+            {user && <Link href="/dashboard" className="text-[#a0a0a0] hover:text-white text-sm transition-colors">Dashboard</Link>}
           </div>
         </div>
 
         {/* Status */}
         <div className="mb-6">
           <span className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${
-            demand.status === 'active' ? 'bg-brand/10 text-brand border border-brand/20'
-            : demand.status === 'met' ? 'bg-success/10 text-success border border-success/20'
-            : 'bg-surface-overlay text-text-muted border border-border-default'
+            demand.status === 'active' ? 'bg-[#00aaff]/10 text-[#00aaff] border border-[#00aaff]/20'
+            : demand.status === 'met' ? 'bg-[#22c55e]/10 text-[#22c55e] border border-[#22c55e]/20'
+            : 'bg-[#222222] text-[#666666] border border-[#222222]'
           }`}>
             {demand.status === 'active' ? 'Active Demand' : demand.status === 'met' ? 'Demand Won ✓' : 'Closed'}
           </span>
         </div>
 
         {/* Title */}
-        <h1 className="text-3xl sm:text-4xl font-bold text-text-primary mb-3">{demand.title}</h1>
-        <p className="text-text-secondary mb-8">
-          Target: <span className="text-brand font-semibold">{demand.targetCompany}</span>
+        <h1 className="text-3xl sm:text-4xl font-bold text-white mb-3">{demand.title}</h1>
+        <p className="text-[#a0a0a0] mb-8">
+          Target: <span className="text-[#00aaff] font-semibold">{demand.targetCompany}</span>
         </p>
 
         {/* Co-Sign Button */}
@@ -108,8 +108,8 @@ export default function DemandDetailPage() {
             disabled={coSigning || !user}
             className={`mb-8 px-8 py-3 rounded-xl font-semibold text-base transition-all disabled:opacity-50 ${
               hasCoSigned
-                ? 'bg-surface-raised border border-border-default text-text-secondary hover:border-danger hover:text-danger'
-                : 'bg-brand hover:bg-brand-dark text-white hover:shadow-lg hover:shadow-brand/30'
+                ? 'bg-[#1a1a1a] border border-[#222222] text-[#a0a0a0] hover:border-[#ef4444] hover:text-[#ef4444]'
+                : 'bg-[#00aaff] hover:bg-[#0088cc] text-white hover:shadow-lg hover:shadow-[#00aaff]/30'
             }`}
           >
             {coSigning ? 'Processing...' : hasCoSigned ? 'Remove Co-Signature' : '✊ Co-Sign This Demand'}
@@ -118,44 +118,44 @@ export default function DemandDetailPage() {
 
         {/* Stats */}
         <div className="grid grid-cols-3 gap-4 mb-8">
-          <div className="bg-surface-raised border border-border-subtle rounded-xl p-5 text-center">
-            <div className="text-3xl font-bold text-brand">{demand.coSignCount || 0}</div>
-            <div className="text-text-muted text-xs mt-1 uppercase tracking-wider">Co-Signers</div>
+          <div className="bg-[#1a1a1a] border border-[#1e1e1e] rounded-xl p-5 text-center">
+            <div className="text-3xl font-bold text-[#00aaff]">{demand.coSignCount || 0}</div>
+            <div className="text-[#666666] text-xs mt-1 uppercase tracking-wider">Co-Signers</div>
           </div>
-          <div className="bg-surface-raised border border-border-subtle rounded-xl p-5 text-center">
-            <div className="text-3xl font-bold text-text-primary">
+          <div className="bg-[#1a1a1a] border border-[#1e1e1e] rounded-xl p-5 text-center">
+            <div className="text-3xl font-bold text-white">
               {demand.createdAt ? Math.floor((Date.now() - demand.createdAt.getTime()) / (1000 * 60 * 60 * 24)) : 0}
             </div>
-            <div className="text-text-muted text-xs mt-1 uppercase tracking-wider">Days Active</div>
+            <div className="text-[#666666] text-xs mt-1 uppercase tracking-wider">Days Active</div>
           </div>
-          <div className="bg-surface-raised border border-border-subtle rounded-xl p-5 text-center">
+          <div className="bg-[#1a1a1a] border border-[#1e1e1e] rounded-xl p-5 text-center">
             <div className="text-3xl">{demand.status === 'active' ? '🔥' : demand.status === 'met' ? '✅' : '🔒'}</div>
-            <div className="text-text-muted text-xs mt-1 uppercase tracking-wider">Status</div>
+            <div className="text-[#666666] text-xs mt-1 uppercase tracking-wider">Status</div>
           </div>
         </div>
 
         {/* Description */}
-        <div className="bg-surface-raised border border-border-subtle rounded-xl p-6 mb-6">
-          <h2 className="text-sm font-medium text-text-muted uppercase tracking-wider mb-3">The Demand</h2>
-          <p className="text-text-primary whitespace-pre-wrap leading-relaxed">{demand.description}</p>
+        <div className="bg-[#1a1a1a] border border-[#1e1e1e] rounded-xl p-6 mb-6">
+          <h2 className="text-sm font-medium text-[#666666] uppercase tracking-wider mb-3">The Demand</h2>
+          <p className="text-white whitespace-pre-wrap leading-relaxed">{demand.description}</p>
         </div>
 
         {/* Success Criteria */}
-        <div className="bg-surface-raised border border-brand/20 rounded-xl p-6 mb-6">
-          <h2 className="text-sm font-medium text-brand uppercase tracking-wider mb-3">Success Criteria</h2>
-          <p className="text-text-primary whitespace-pre-wrap leading-relaxed">{demand.successCriteria}</p>
+        <div className="bg-[#1a1a1a] border border-[#00aaff]/20 rounded-xl p-6 mb-6">
+          <h2 className="text-sm font-medium text-[#00aaff] uppercase tracking-wider mb-3">Success Criteria</h2>
+          <p className="text-white whitespace-pre-wrap leading-relaxed">{demand.successCriteria}</p>
         </div>
 
         {/* Creator */}
-        <div className="bg-surface-raised border border-border-subtle rounded-xl p-6 mb-6">
+        <div className="bg-[#1a1a1a] border border-[#1e1e1e] rounded-xl p-6 mb-6">
           <div className="flex justify-between items-center">
             <div>
-              <div className="text-xs text-text-muted uppercase tracking-wider mb-1">Created by</div>
-              <div className="text-text-primary font-medium">{demand.creatorName}</div>
+              <div className="text-xs text-[#666666] uppercase tracking-wider mb-1">Created by</div>
+              <div className="text-white font-medium">{demand.creatorName}</div>
             </div>
             <div className="text-right">
-              <div className="text-xs text-text-muted uppercase tracking-wider mb-1">Created</div>
-              <div className="text-text-primary font-medium">
+              <div className="text-xs text-[#666666] uppercase tracking-wider mb-1">Created</div>
+              <div className="text-white font-medium">
                 {demand.createdAt ? new Date(demand.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'Unknown'}
               </div>
             </div>

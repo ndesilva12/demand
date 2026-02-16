@@ -38,22 +38,22 @@ export default function DashboardPage() {
   }, [user]);
 
   if (authLoading || !user) {
-    return <div className="min-h-screen bg-surface-deep flex items-center justify-center"><div className="text-text-muted">Loading...</div></div>;
+    return <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center"><div className="text-[#666666]">Loading...</div></div>;
   }
 
   const DemandCard = ({ demand }: { demand: Demand }) => (
-    <Link href={`/demands/${demand.id}`} className="block bg-surface-raised border border-border-subtle rounded-xl p-5 hover:border-brand/30 transition-all group">
+    <Link href={`/demands/${demand.id}`} className="block bg-[#1a1a1a] border border-[#1e1e1e] rounded-xl p-5 hover:border-[#00aaff]/30 transition-all group">
       <div className="flex justify-between items-start">
         <div className="flex-1 mr-4">
-          <h3 className="font-bold text-text-primary group-hover:text-brand transition-colors text-sm">{demand.title}</h3>
-          <p className="text-xs text-text-muted mt-1">Target: {demand.targetCompany}</p>
-          <div className="flex items-center gap-3 mt-2 text-xs text-text-muted">
-            <span><span className="text-brand font-semibold">{demand.coSignCount || 0}</span> co-signers</span>
+          <h3 className="font-bold text-white group-hover:text-[#00aaff] transition-colors text-sm">{demand.title}</h3>
+          <p className="text-xs text-[#666666] mt-1">Target: {demand.targetCompany}</p>
+          <div className="flex items-center gap-3 mt-2 text-xs text-[#666666]">
+            <span><span className="text-[#00aaff] font-semibold">{demand.coSignCount || 0}</span> co-signers</span>
             <span>{demand.createdAt ? new Date(demand.createdAt).toLocaleDateString() : ''}</span>
           </div>
         </div>
         <span className={`px-2.5 py-1 rounded-full text-xs font-medium shrink-0 ${
-          demand.status === 'active' ? 'bg-brand/10 text-brand' : demand.status === 'met' ? 'bg-success/10 text-success' : 'bg-surface-overlay text-text-muted'
+          demand.status === 'active' ? 'bg-[#00aaff]/10 text-[#00aaff]' : demand.status === 'met' ? 'bg-[#22c55e]/10 text-[#22c55e]' : 'bg-[#222222] text-[#666666]'
         }`}>
           {demand.status === 'active' ? 'Active' : demand.status === 'met' ? 'Won' : 'Closed'}
         </span>
@@ -62,46 +62,46 @@ export default function DashboardPage() {
   );
 
   return (
-    <div className="min-h-screen bg-surface-deep">
+    <div className="min-h-screen bg-[#0a0a0a]">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
-          <Link href="/" className="text-2xl font-bold text-brand">demand</Link>
+          <Link href="/" className="text-2xl font-bold text-[#00aaff]">demand</Link>
           <div className="flex items-center gap-4">
-            <Link href="/demands" className="text-text-secondary hover:text-text-primary text-sm transition-colors">Browse</Link>
-            <Link href="/create" className="bg-brand hover:bg-brand-dark text-white px-5 py-2 rounded-lg text-sm font-medium transition-all">+ New Demand</Link>
-            <button onClick={async () => { await signOut(); router.push('/'); }} className="text-text-muted hover:text-danger text-sm transition-colors">Sign Out</button>
+            <Link href="/demands" className="text-[#a0a0a0] hover:text-white text-sm transition-colors">Browse</Link>
+            <Link href="/create" className="bg-[#00aaff] hover:bg-[#0088cc] text-white px-5 py-2 rounded-lg text-sm font-medium transition-all">+ New Demand</Link>
+            <button onClick={async () => { await signOut(); router.push('/'); }} className="text-[#666666] hover:text-[#ef4444] text-sm transition-colors">Sign Out</button>
           </div>
         </div>
 
-        <h1 className="text-3xl font-bold text-text-primary mb-1">Dashboard</h1>
-        <p className="text-text-secondary text-sm mb-8">{user.email}</p>
+        <h1 className="text-3xl font-bold text-white mb-1">Dashboard</h1>
+        <p className="text-[#a0a0a0] text-sm mb-8">{user.email}</p>
 
         {/* Stats */}
         <div className="grid grid-cols-3 gap-4 mb-10">
-          <div className="bg-surface-raised border border-border-subtle rounded-xl p-5 text-center">
-            <div className="text-2xl font-bold text-brand">{myDemands.length}</div>
-            <div className="text-text-muted text-xs mt-1 uppercase tracking-wider">Created</div>
+          <div className="bg-[#1a1a1a] border border-[#1e1e1e] rounded-xl p-5 text-center">
+            <div className="text-2xl font-bold text-[#00aaff]">{myDemands.length}</div>
+            <div className="text-[#666666] text-xs mt-1 uppercase tracking-wider">Created</div>
           </div>
-          <div className="bg-surface-raised border border-border-subtle rounded-xl p-5 text-center">
-            <div className="text-2xl font-bold text-brand">{coSignedDemands.length}</div>
-            <div className="text-text-muted text-xs mt-1 uppercase tracking-wider">Co-Signed</div>
+          <div className="bg-[#1a1a1a] border border-[#1e1e1e] rounded-xl p-5 text-center">
+            <div className="text-2xl font-bold text-[#00aaff]">{coSignedDemands.length}</div>
+            <div className="text-[#666666] text-xs mt-1 uppercase tracking-wider">Co-Signed</div>
           </div>
-          <div className="bg-surface-raised border border-border-subtle rounded-xl p-5 text-center">
-            <div className="text-2xl font-bold text-success">{myDemands.filter((d) => d.status === 'met').length}</div>
-            <div className="text-text-muted text-xs mt-1 uppercase tracking-wider">Won</div>
+          <div className="bg-[#1a1a1a] border border-[#1e1e1e] rounded-xl p-5 text-center">
+            <div className="text-2xl font-bold text-[#22c55e]">{myDemands.filter((d) => d.status === 'met').length}</div>
+            <div className="text-[#666666] text-xs mt-1 uppercase tracking-wider">Won</div>
           </div>
         </div>
 
         {/* My Demands */}
         <div className="mb-10">
-          <h2 className="text-lg font-bold text-text-primary mb-4">My Demands</h2>
+          <h2 className="text-lg font-bold text-white mb-4">My Demands</h2>
           {loading ? (
-            <div className="animate-pulse bg-surface-raised rounded-xl h-20"></div>
+            <div className="animate-pulse bg-[#1a1a1a] rounded-xl h-20"></div>
           ) : myDemands.length === 0 ? (
-            <div className="bg-surface-raised border border-border-subtle rounded-xl p-8 text-center">
-              <p className="text-text-muted text-sm mb-4">No demands yet.</p>
-              <Link href="/create" className="bg-brand hover:bg-brand-dark text-white px-5 py-2 rounded-lg text-sm font-medium transition-all inline-block">Create One</Link>
+            <div className="bg-[#1a1a1a] border border-[#1e1e1e] rounded-xl p-8 text-center">
+              <p className="text-[#666666] text-sm mb-4">No demands yet.</p>
+              <Link href="/create" className="bg-[#00aaff] hover:bg-[#0088cc] text-white px-5 py-2 rounded-lg text-sm font-medium transition-all inline-block">Create One</Link>
             </div>
           ) : (
             <div className="space-y-3">{myDemands.map((d) => <DemandCard key={d.id} demand={d} />)}</div>
@@ -110,13 +110,13 @@ export default function DashboardPage() {
 
         {/* Co-Signed */}
         <div>
-          <h2 className="text-lg font-bold text-text-primary mb-4">Demands I Support</h2>
+          <h2 className="text-lg font-bold text-white mb-4">Demands I Support</h2>
           {loading ? (
-            <div className="animate-pulse bg-surface-raised rounded-xl h-20"></div>
+            <div className="animate-pulse bg-[#1a1a1a] rounded-xl h-20"></div>
           ) : coSignedDemands.length === 0 ? (
-            <div className="bg-surface-raised border border-border-subtle rounded-xl p-8 text-center">
-              <p className="text-text-muted text-sm mb-4">No co-signed demands.</p>
-              <Link href="/demands" className="bg-brand hover:bg-brand-dark text-white px-5 py-2 rounded-lg text-sm font-medium transition-all inline-block">Browse Demands</Link>
+            <div className="bg-[#1a1a1a] border border-[#1e1e1e] rounded-xl p-8 text-center">
+              <p className="text-[#666666] text-sm mb-4">No co-signed demands.</p>
+              <Link href="/demands" className="bg-[#00aaff] hover:bg-[#0088cc] text-white px-5 py-2 rounded-lg text-sm font-medium transition-all inline-block">Browse Demands</Link>
             </div>
           ) : (
             <div className="space-y-3">{coSignedDemands.map((d) => <DemandCard key={d.id} demand={d} />)}</div>

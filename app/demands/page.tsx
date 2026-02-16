@@ -11,6 +11,7 @@ export default function DemandsPage() {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [sortBy, setSortBy] = useState<'newest' | 'popular' | 'trending'>('newest');
 
   useEffect(() => {
     const fetchDemands = async () => {
@@ -39,6 +40,18 @@ export default function DemandsPage() {
       demand.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       demand.targetCompany.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesFilter && matchesSearch && demand.visibility === 'public';
+  }).sort((a, b) => {
+    if (sortBy === 'popular') return (b.coSignCount || 0) - (a.coSignCount || 0);
+    if (sortBy === 'trending') {
+      // Trending = most co-signs in recent time (weighted by recency)
+      const ageA = Date.now() - (a.createdAt ? new Date(a.createdAt).getTime() : 0);
+      const ageB = Date.now() - (b.createdAt ? new Date(b.createdAt).getTime() : 0);
+      const scoreA = (a.coSignCount || 0) / Math.max(ageA / 86400000, 1);
+      const scoreB = (b.coSignCount || 0) / Math.max(ageB / 86400000, 1);
+      return scoreB - scoreA;
+    }
+    // newest
+    return (b.createdAt ? new Date(b.createdAt).getTime() : 0) - (a.createdAt ? new Date(a.createdAt).getTime() : 0);
   });
 
   const filters = [
@@ -75,8 +88,8 @@ export default function DemandsPage() {
           />
         </div>
 
-        {/* Filters */}
-        <div className="flex gap-2 mb-8">
+        {/* Filters & Sort */}
+        <div className="flex flex-wrap items-center gap-2 mb-8">
           {filters.map((f) => (
             <button
               key={f.key}
@@ -90,6 +103,22 @@ export default function DemandsPage() {
               {f.label}
             </button>
           ))}
+          <div className="ml-auto flex items-center gap-1">
+            <span className="text-[#666666] text-xs mr-2">Sort:</span>
+            {([['newest', 'Newest'], ['popular', 'Most Supported'], ['trending', 'Trending']] as const).map(([key, label]) => (
+              <button
+                key={key}
+                onClick={() => setSortBy(key)}
+                className={`px-3 py-1.5 rounded text-xs font-medium transition-all ${
+                  sortBy === key
+                    ? 'bg-[#222222] text-white'
+                    : 'text-[#666666] hover:text-[#a0a0a0]'
+                }`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Demands List */}
