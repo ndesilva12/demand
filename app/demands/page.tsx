@@ -49,14 +49,14 @@ export default function DemandsPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-surface-deep">
+    <div className="min-h-screen bg-[#0a0a0a]">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
-          <Link href="/" className="text-2xl font-bold text-brand">demand</Link>
+          <Link href="/" className="text-2xl font-bold text-[#00aaff]">demand</Link>
           <div className="flex items-center gap-4">
-            <Link href="/dashboard" className="text-text-secondary hover:text-text-primary text-sm transition-colors">Dashboard</Link>
-            <Link href="/create" className="bg-brand hover:bg-brand-dark text-white px-5 py-2 rounded-lg text-sm font-medium transition-all">
+            <Link href="/dashboard" className="text-[#a0a0a0] hover:text-white text-sm transition-colors">Dashboard</Link>
+            <Link href="/create" className="bg-[#00aaff] hover:bg-[#0088cc] text-white px-5 py-2 rounded-lg text-sm font-medium transition-all">
               + New Demand
             </Link>
           </div>
@@ -64,8 +64,8 @@ export default function DemandsPage() {
 
         {/* Title & Search */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-text-primary mb-2">Demands</h1>
-          <p className="text-text-secondary text-sm mb-6">Explore active demands and co-sign those you support.</p>
+          <h1 className="text-3xl font-bold text-white mb-2">Demands</h1>
+          <p className="text-[#a0a0a0] text-sm mb-6">Explore active demands and co-sign those you support.</p>
           <input
             type="text"
             value={searchQuery}
@@ -83,8 +83,8 @@ export default function DemandsPage() {
               onClick={() => setFilter(f.key)}
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                 filter === f.key
-                  ? 'bg-brand text-white'
-                  : 'bg-surface-raised text-text-secondary hover:text-text-primary border border-border-subtle hover:border-border-default'
+                  ? 'bg-[#00aaff] text-white'
+                  : 'bg-[#1a1a1a] text-[#a0a0a0] hover:text-white border border-[#1e1e1e] hover:border-[#222222]'
               }`}
             >
               {f.label}
@@ -96,19 +96,19 @@ export default function DemandsPage() {
         {loading ? (
           <div className="space-y-4">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="bg-surface-raised border border-border-subtle rounded-xl p-6 animate-pulse">
-                <div className="h-5 bg-surface-overlay rounded w-3/4 mb-3"></div>
-                <div className="h-3 bg-surface-overlay rounded w-1/4 mb-4"></div>
-                <div className="h-3 bg-surface-overlay rounded w-full"></div>
+              <div key={i} className="bg-[#1a1a1a] border border-[#1e1e1e] rounded-xl p-6 animate-pulse">
+                <div className="h-5 bg-[#222222] rounded w-3/4 mb-3"></div>
+                <div className="h-3 bg-[#222222] rounded w-1/4 mb-4"></div>
+                <div className="h-3 bg-[#222222] rounded w-full"></div>
               </div>
             ))}
           </div>
         ) : filteredDemands.length === 0 ? (
-          <div className="bg-surface-raised border border-border-subtle rounded-xl p-12 text-center">
+          <div className="bg-[#1a1a1a] border border-[#1e1e1e] rounded-xl p-12 text-center">
             <div className="text-4xl mb-4">📭</div>
-            <h3 className="text-xl font-bold text-text-primary mb-2">No demands found</h3>
-            <p className="text-text-secondary mb-6 text-sm">Be the first to create one.</p>
-            <Link href="/create" className="bg-brand hover:bg-brand-dark text-white px-6 py-3 rounded-lg font-semibold transition-all inline-block">
+            <h3 className="text-xl font-bold text-white mb-2">No demands found</h3>
+            <p className="text-[#a0a0a0] mb-6 text-sm">Be the first to create one.</p>
+            <Link href="/create" className="bg-[#00aaff] hover:bg-[#0088cc] text-white px-6 py-3 rounded-lg font-semibold transition-all inline-block">
               Create Demand
             </Link>
           </div>
@@ -118,29 +118,29 @@ export default function DemandsPage() {
               <Link
                 key={demand.id}
                 href={`/demands/${demand.id}`}
-                className="block bg-surface-raised border border-border-subtle rounded-xl p-6 hover:border-brand/30 transition-all group"
+                className="block bg-[#1a1a1a] border border-[#1e1e1e] rounded-xl p-6 hover:border-[#00aaff]/30 transition-all group"
               >
                 <div className="flex justify-between items-start mb-3">
                   <div className="flex-1 mr-4">
-                    <h3 className="text-lg font-bold text-text-primary group-hover:text-brand transition-colors">
+                    <h3 className="text-lg font-bold text-white group-hover:text-[#00aaff] transition-colors">
                       {demand.title}
                     </h3>
-                    <p className="text-xs text-text-muted mt-1">
-                      Target: <span className="text-brand font-medium">{demand.targetCompany}</span>
+                    <p className="text-xs text-[#666666] mt-1">
+                      Target: <span className="text-[#00aaff] font-medium">{demand.targetCompany}</span>
                     </p>
                   </div>
                   <span className={`px-3 py-1 rounded-full text-xs font-medium shrink-0 ${
-                    demand.status === 'active' ? 'bg-brand/10 text-brand border border-brand/20'
-                    : demand.status === 'met' ? 'bg-success/10 text-success border border-success/20'
-                    : 'bg-surface-overlay text-text-muted border border-border-default'
+                    demand.status === 'active' ? 'bg-[#00aaff]/10 text-[#00aaff] border border-[#00aaff]/20'
+                    : demand.status === 'met' ? 'bg-[#22c55e]/10 text-[#22c55e] border border-[#22c55e]/20'
+                    : 'bg-[#222222] text-[#666666] border border-[#222222]'
                   }`}>
                     {demand.status === 'active' ? 'Active' : demand.status === 'met' ? 'Won' : 'Closed'}
                   </span>
                 </div>
-                <p className="text-text-secondary text-sm line-clamp-2 mb-4">{demand.description}</p>
-                <div className="flex items-center justify-between text-xs text-text-muted">
+                <p className="text-[#a0a0a0] text-sm line-clamp-2 mb-4">{demand.description}</p>
+                <div className="flex items-center justify-between text-xs text-[#666666]">
                   <div className="flex items-center gap-4">
-                    <span><span className="text-brand font-semibold">{demand.coSignCount || 0}</span> co-signers</span>
+                    <span><span className="text-[#00aaff] font-semibold">{demand.coSignCount || 0}</span> co-signers</span>
                     <span>By {demand.creatorName}</span>
                   </div>
                   <span>{demand.createdAt ? new Date(demand.createdAt).toLocaleDateString() : ''}</span>
