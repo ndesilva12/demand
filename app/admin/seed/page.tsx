@@ -143,9 +143,10 @@ export default function SeedDemoPage() {
 
   const seedData = async () => {
     setLoading(true);
-    setStatus('Starting seed...\n');
+    setStatus('🌱 Starting seed...\n');
 
     const userUids: string[] = [];
+    const userCredentials: { email: string; uid: string }[] = [];
 
     // Create users
     setStatus(prev => prev + '\n📧 Creating demo users...\n');
@@ -153,14 +154,21 @@ export default function SeedDemoPage() {
       try {
         const userCred = await createUserWithEmailAndPassword(auth, user.email, user.password);
         userUids.push(userCred.user.uid);
+        userCredentials.push({ email: user.email, uid: userCred.user.uid });
         setStatus(prev => prev + `✓ Created: ${user.name}\n`);
       } catch (error: any) {
         if (error.code === 'auth/email-already-in-use') {
-          setStatus(prev => prev + `⚠ Already exists: ${user.email}\n`);
-          // For existing users, we'll need to handle differently
-          // For now, just skip them
+          try {
+            // If user exists, try to get their UID
+            const existingUser = await signInWithEmailAndPassword(auth, user.email, user.password);
+            userUids.push(existingUser.user.uid);
+            userCredentials.push({ email: user.email, uid: existingUser.user.uid });
+            setStatus(prev => prev + `⚠ User existed: ${user.name}\n`);
+          } catch (signInError) {
+            setStatus(prev => prev + `✗ Could not sign in existing user: ${user.email}\n`);
+          }
         } else {
-          setStatus(prev => prev + `✗ Error: ${error.message}\n`);
+          setStatus(prev => prev + `✗ Error creating user: ${error.message}\n`);
         }
       }
     }
@@ -168,20 +176,16 @@ export default function SeedDemoPage() {
     // Create demands
     setStatus(prev => prev + '\n📋 Creating demo demands...\n');
     for (const demand of DEMO_DEMANDS) {
-      if (userUids.length < DEMO_USERS.length) {
-        setStatus(prev => prev + '⚠ Not all users created, skipping demands\n');
-        break;
-      }
-
       try {
-        const coSignerUids = demand.coSigners.map(idx => userUids[idx]);
-        
-        await addDoc(collection(db, 'demands'), {
+        const creatorCredential = userCredentials[demand.creator];
+        const coSignerUids = demand.coSigners.map(idx => userCredentials[idx].uid);
+
+        const demandData = {
           title: demand.title,
           description: demand.description,
           targetCompany: demand.targetCompany,
           successCriteria: demand.successCriteria,
-          creatorId: userUids[demand.creator],
+          creatorId: creatorCredential.uid,
           creatorName: DEMO_USERS[demand.creator].name,
           createdAt: serverTimestamp(),
           updatedAt: serverTimestamp(),
@@ -190,11 +194,15 @@ export default function SeedDemoPage() {
           coSignCount: coSignerUids.length,
           visibility: 'public',
           tags: ['DEMO'],
-        });
+        };
 
+        // Attempt to add demand
+        const docRef = await addDoc(collection(db, 'demands'), demandData);
+        
         setStatus(prev => prev + `✓ Created: ${demand.title}\n`);
       } catch (error: any) {
         setStatus(prev => prev + `✗ Error creating demand: ${error.message}\n`);
+        setStatus(prev => prev + `   Details: ${JSON.stringify(error, null, 2)}\n`);
       }
     }
 
