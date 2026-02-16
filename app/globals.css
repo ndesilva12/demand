@@ -3,5 +3,6 @@
 @tailwind utilities;
 
 body {
-  @apply bg-dark-bg text-dark-text;
+  background-color: theme('colors.dark-bg');
+  color: theme('colors.dark-text');
 }
