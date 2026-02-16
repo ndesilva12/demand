@@ -2,7 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  background-color: #0a0a0a;
-  color: #e0e0e0;
+/* Minimal custom styles */
+@layer base {
+  body {
+    @apply bg-dark-background text-dark-text;
+  }
+}
+
+@layer utilities {
+  .bg-dark { @apply bg-dark-background; }
+  .text-dark { @apply text-dark-text; }
 }
