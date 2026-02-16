@@ -80,13 +80,11 @@ export default function DemandDetailPage() {
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-8">
-          <Link href="/" className="text-2xl font-bold text-[#00aaff]">demand</Link>
-          <div className="flex items-center gap-4">
-            <Link href="/demands" className="text-[#a0a0a0] hover:text-white text-sm transition-colors">← All Demands</Link>
-            {user && <Link href="/dashboard" className="text-[#a0a0a0] hover:text-white text-sm transition-colors">Dashboard</Link>}
-          </div>
+        {/* Breadcrumb */}
+        <div className="flex items-center gap-2 text-sm text-[#666666] mb-6">
+          <Link href="/demands" className="hover:text-[#00aaff] transition-colors">Demands</Link>
+          <span>›</span>
+          <span className="text-[#a0a0a0] truncate">{demand?.title?.slice(0, 40)}...</span>
         </div>
 
         {/* Status */}

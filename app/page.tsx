@@ -6,38 +6,8 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Navigation */}
-        <nav className="flex justify-between items-center py-6">
-          <Link href="/" className="text-2xl font-bold tracking-tight">
-            <span className="text-[#00aaff]">demand</span>
-          </Link>
-          <div className="flex items-center gap-6">
-            <Link href="/demands" className="text-[#a0a0a0] hover:text-white transition-colors text-sm">
-              Browse
-            </Link>
-            <Link href="/pressure-board" className="text-[#a0a0a0] hover:text-white transition-colors text-sm">
-              Pressure Board
-            </Link>
-            <Link href="/coalitions" className="text-[#a0a0a0] hover:text-white transition-colors text-sm">
-              Coalitions
-            </Link>
-            <Link href="/weekly" className="text-[#a0a0a0] hover:text-white transition-colors text-sm">
-              Weekly
-            </Link>
-            <Link href="/login" className="text-[#a0a0a0] hover:text-white transition-colors text-sm">
-              Log in
-            </Link>
-            <Link
-              href="/signup"
-              className="bg-[#00aaff] hover:bg-[#0088cc] text-white px-5 py-2 rounded-lg text-sm font-medium transition-all hover:shadow-lg hover:shadow-[#00aaff]/20"
-            >
-              Get Started
-            </Link>
-          </div>
-        </nav>
-
         {/* Hero */}
-        <div className="pt-24 pb-20 text-center max-w-3xl mx-auto">
+        <div className="pt-12 sm:pt-24 pb-16 sm:pb-20 text-center max-w-3xl mx-auto animate-fade-in">
           <div className="inline-block mb-6 px-4 py-1.5 rounded-full border border-[#222222] bg-[#1a1a1a] text-[#a0a0a0] text-xs tracking-wide uppercase">
             Consumer-Powered Corporate Accountability
           </div>
@@ -165,21 +135,23 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Footer */}
-        <footer className="border-t border-[#1e1e1e] py-12 text-center">
-          <div className="text-[#666666] text-sm">
-            <span className="text-[#00aaff] font-semibold">demand</span>
-            <span className="mx-2">·</span>
-            &copy; 2026
-            <span className="mx-2">·</span>
-            Empowering consumers to create change.
+        {/* Stats Bar */}
+        <div className="max-w-4xl mx-auto mb-24">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {[
+              { label: 'Active Demands', value: '33+', icon: '📋' },
+              { label: 'Co-signers', value: '892K+', icon: '✊' },
+              { label: 'Companies Targeted', value: '22', icon: '🏢' },
+              { label: 'Victories Won', value: '4', icon: '🏆' },
+            ].map(stat => (
+              <div key={stat.label} className="bg-[#1a1a1a] border border-[#1e1e1e] rounded-xl p-4 text-center">
+                <div className="text-2xl mb-1">{stat.icon}</div>
+                <div className="text-2xl font-bold text-[#00aaff]">{stat.value}</div>
+                <div className="text-xs text-[#666666] mt-1">{stat.label}</div>
+              </div>
+            ))}
           </div>
-          <div className="mt-4 flex gap-6 justify-center text-xs text-[#666666]">
-            <Link href="/about" className="hover:text-[#00aaff] transition-colors">About</Link>
-            <Link href="/privacy" className="hover:text-[#00aaff] transition-colors">Privacy</Link>
-            <Link href="/terms" className="hover:text-[#00aaff] transition-colors">Terms</Link>
-          </div>
-        </footer>
+        </div>
       </div>
     </div>
   );

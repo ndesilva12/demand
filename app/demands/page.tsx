@@ -64,20 +64,9 @@ export default function DemandsPage() {
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-8">
-          <Link href="/" className="text-2xl font-bold text-[#00aaff]">demand</Link>
-          <div className="flex items-center gap-4">
-            <Link href="/dashboard" className="text-[#a0a0a0] hover:text-white text-sm transition-colors">Dashboard</Link>
-            <Link href="/create" className="bg-[#00aaff] hover:bg-[#0088cc] text-white px-5 py-2 rounded-lg text-sm font-medium transition-all">
-              + New Demand
-            </Link>
-          </div>
-        </div>
-
         {/* Title & Search */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-white mb-2">Demands</h1>
+          <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">Demands</h1>
           <p className="text-[#a0a0a0] text-sm mb-6">Explore active demands and co-sign those you support.</p>
           <input
             type="text"
@@ -147,7 +136,7 @@ export default function DemandsPage() {
               <Link
                 key={demand.id}
                 href={`/demands/${demand.id}`}
-                className="block bg-[#1a1a1a] border border-[#1e1e1e] rounded-xl p-6 hover:border-[#00aaff]/30 transition-all group"
+                className="block bg-[#1a1a1a] border border-[#1e1e1e] rounded-xl p-4 sm:p-6 hover:border-[#00aaff]/30 transition-all group card-hover animate-fade-in"
               >
                 <div className="flex justify-between items-start mb-3">
                   <div className="flex-1 mr-4">

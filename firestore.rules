@@ -2,7 +2,6 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     
-    // Helper functions
     function isSignedIn() {
       return request.auth != null;
     }
@@ -13,44 +12,87 @@ service cloud.firestore {
     
     // Demands collection
     match /demands/{demandId} {
-      // Anyone can read public demands
-      allow read: if resource.data.visibility == 'public' || 
-                     (isSignedIn() && resource.data.creatorId == request.auth.uid);
-      
-      // Only authenticated users can create demands
-      allow create: if isSignedIn() && 
-                       request.resource.data.creatorId == request.auth.uid &&
-                       request.resource.data.createdAt == request.time &&
-                       request.resource.data.updatedAt == request.time;
-      
-      // Only creator can update their own demands
-      allow update: if isSignedIn() && 
-                       resource.data.creatorId == request.auth.uid &&
-                       request.resource.data.creatorId == resource.data.creatorId;
-      
-      // Only creator can delete their demands
-      allow delete: if isSignedIn() && resource.data.creatorId == request.auth.uid;
-    }
-    
-    // Messages collection
-    match /messages/{messageId} {
-      // Anyone can read messages for public demands
       allow read: if true;
+      allow create: if isSignedIn();
+      allow update: if isSignedIn();
+      allow delete: if isSignedIn();
       
-      // Only authenticated users can create messages
-      allow create: if isSignedIn() && 
-                       request.resource.data.authorId == request.auth.uid &&
-                       request.resource.data.createdAt == request.time;
+      // Subcollections
+      match /messages/{messageId} {
+        allow read: if true;
+        allow write: if isSignedIn();
+      }
       
-      // Only author can update/delete their own messages
-      allow update, delete: if isSignedIn() && 
-                               resource.data.authorId == request.auth.uid;
+      match /corporateResponses/{responseId} {
+        allow read: if true;
+        allow write: if isSignedIn();
+      }
+      
+      match /spokespersonNominations/{nomId} {
+        allow read: if true;
+        allow write: if isSignedIn();
+      }
     }
     
-    // User profiles (optional, for future use)
+    // Users
     match /users/{userId} {
       allow read: if true;
-      allow write: if isOwner(userId);
+      allow create: if isSignedIn();
+      allow update: if isSignedIn();
+    }
+    
+    // Companies
+    match /companies/{companyId} {
+      allow read: if true;
+      allow write: if isSignedIn();
+    }
+    
+    // Coalitions
+    match /coalitions/{coalitionId} {
+      allow read: if true;
+      allow write: if isSignedIn();
+    }
+    
+    // Pressure Board
+    match /pressureBoard/{entryId} {
+      allow read: if true;
+      allow write: if isSignedIn();
+    }
+    
+    // Weekly Digests
+    match /weeklyDigests/{digestId} {
+      allow read: if true;
+      allow write: if isSignedIn();
+    }
+    
+    // Messages (top-level)
+    match /messages/{messageId} {
+      allow read: if true;
+      allow write: if isSignedIn();
+    }
+    
+    // Corporate Responses (top-level)
+    match /corporateResponses/{responseId} {
+      allow read: if true;
+      allow write: if isSignedIn();
+    }
+    
+    // Edit Proposals
+    match /editProposals/{proposalId} {
+      allow read: if true;
+      allow write: if isSignedIn();
+    }
+    
+    // Demand Forks
+    match /demandForks/{forkId} {
+      allow read: if true;
+      allow write: if isSignedIn();
+    }
+    
+    // Notifications
+    match /notifications/{notifId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn();
     }
   }
 }
