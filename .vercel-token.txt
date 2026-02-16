@@ -1,0 +1,14 @@
+Instructions for Norman to deploy:
+
+Option 1: Wait for auto-deploy (should trigger from latest push)
+- Check Vercel dashboard in 1-2 minutes
+- Latest commit: 4bed2ad
+
+Option 2: Manual deploy via CLI
+Run these commands in your terminal:
+
+cd /path/to/demand/site
+npx vercel login
+npx vercel --prod
+
+This will force an immediate production deployment.
