@@ -44,7 +44,7 @@ export default function PressureBoardPage() {
           <div className="inline-block mb-4 px-4 py-1.5 rounded-full border border-[#ef4444]/20 bg-[#ef4444]/5 text-[#ef4444] text-xs tracking-wide uppercase font-medium">
             🔥 Live Rankings
           </div>
-          <h1 className="text-4xl sm:text-5xl font-bold mb-4">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
             America&apos;s Most <span className="text-[#00aaff]">Pressured</span> Companies
           </h1>
           <p className="text-[#a0a0a0] text-lg max-w-2xl mx-auto">
@@ -53,7 +53,21 @@ export default function PressureBoardPage() {
         </div>
 
         {loading ? (
-          <div className="text-center text-[#666666] py-20 animate-pulse">Loading pressure data...</div>
+          <div className="space-y-3">
+            {[1,2,3,4,5].map(i => (
+              <div key={i} className="bg-[#1a1a1a] border border-[#1e1e1e] rounded-xl p-5">
+                <div className="flex items-center gap-5">
+                  <div className="skeleton h-10 w-10 rounded" />
+                  <div className="flex-1">
+                    <div className="skeleton h-6 w-48 rounded mb-2" />
+                    <div className="skeleton h-3 w-32 rounded" />
+                  </div>
+                  <div className="skeleton h-8 w-20 rounded" />
+                </div>
+                <div className="skeleton h-1.5 w-full rounded-full mt-3" />
+              </div>
+            ))}
+          </div>
         ) : entries.length === 0 ? (
           <div className="text-center py-20">
             <div className="text-5xl mb-4">📊</div>
@@ -67,24 +81,24 @@ export default function PressureBoardPage() {
               <Link key={entry.companyName} href={`/companies/${encodeURIComponent(entry.companyName)}`}
                 className={`block bg-gradient-to-r ${getMedalColor(entry.rank)} border rounded-xl p-5 hover:scale-[1.01] transition-all group`}>
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-5">
-                    <div className="text-3xl font-black text-[#333333] w-12 text-center">
+                  <div className="flex items-center gap-3 sm:gap-5 flex-1 min-w-0">
+                    <div className="text-2xl sm:text-3xl font-black text-[#333333] w-8 sm:w-12 text-center shrink-0">
                       {entry.rank <= 3 ? ['🥇','🥈','🥉'][entry.rank - 1] : `#${entry.rank}`}
                     </div>
-                    <div>
-                      <h3 className="text-xl font-bold text-white group-hover:text-[#00aaff] transition-colors">
+                    <div className="min-w-0">
+                      <h3 className="text-base sm:text-xl font-bold text-white group-hover:text-[#00aaff] transition-colors truncate">
                         {entry.companyName}
                       </h3>
-                      <div className="flex items-center gap-4 mt-1 text-sm text-[#a0a0a0]">
-                        <span>{entry.activeDemands} active demand{entry.activeDemands !== 1 ? 's' : ''}</span>
-                        <span>·</span>
-                        <span>{formatNumber(entry.totalCoSigners)} co-signers</span>
+                      <div className="flex items-center gap-2 sm:gap-4 mt-1 text-xs sm:text-sm text-[#a0a0a0]">
+                        <span>{entry.activeDemands} demand{entry.activeDemands !== 1 ? 's' : ''}</span>
+                        <span className="hidden sm:inline">·</span>
+                        <span className="hidden sm:inline">{formatNumber(entry.totalCoSigners)} co-signers</span>
                       </div>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <div className="text-2xl font-black text-[#00aaff]">{formatNumber(entry.pressureScore)}</div>
-                    <div className="text-xs text-[#666666] uppercase tracking-wider">Pressure Score</div>
+                  <div className="text-right shrink-0 ml-3">
+                    <div className="text-xl sm:text-2xl font-black text-[#00aaff]">{formatNumber(entry.pressureScore)}</div>
+                    <div className="text-[10px] sm:text-xs text-[#666666] uppercase tracking-wider">Score</div>
                   </div>
                 </div>
                 {/* Pressure bar */}
