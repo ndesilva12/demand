@@ -38,7 +38,7 @@ export default function CoalitionsPage() {
         
 
         <div className="text-center mb-12">
-          <h1 className="text-4xl sm:text-5xl font-bold mb-4">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
             ⚡ <span className="text-[#00aaff]">Coalitions</span>
           </h1>
           <p className="text-[#a0a0a0] text-lg max-w-2xl mx-auto">
@@ -47,7 +47,19 @@ export default function CoalitionsPage() {
         </div>
 
         {loading ? (
-          <div className="text-center text-[#666666] py-20 animate-pulse">Loading coalitions...</div>
+          <div className="space-y-6">
+            {[1,2,3].map(i => (
+              <div key={i} className="bg-[#1a1a1a] border border-[#222222] rounded-xl p-6">
+                <div className="skeleton h-7 w-64 rounded mb-2" />
+                <div className="skeleton h-4 w-full rounded mb-4" />
+                <div className="flex gap-2 mb-4">
+                  <div className="skeleton h-6 w-20 rounded-full" />
+                  <div className="skeleton h-6 w-24 rounded-full" />
+                </div>
+                <div className="skeleton h-3 w-48 rounded" />
+              </div>
+            ))}
+          </div>
         ) : coalitions.length === 0 ? (
           <div className="text-center py-20">
             <div className="text-5xl mb-4">⚡</div>
@@ -61,17 +73,17 @@ export default function CoalitionsPage() {
           <div className="space-y-6">
             {coalitions.map(coalition => (
               <Link key={coalition.id} href={`/coalitions/${coalition.id}`}
-                className="block bg-[#1a1a1a] border border-[#222222] rounded-xl p-6 hover:border-[#00aaff]/30 transition-all group">
-                <div className="flex justify-between items-start mb-4">
+                className="block bg-[#1a1a1a] border border-[#222222] rounded-xl p-4 sm:p-6 hover:border-[#00aaff]/30 transition-all group card-hover">
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-4">
                   <div>
-                    <h2 className="text-2xl font-bold text-white group-hover:text-[#00aaff] transition-colors">
+                    <h2 className="text-xl sm:text-2xl font-bold text-white group-hover:text-[#00aaff] transition-colors">
                       {coalition.name}
                     </h2>
-                    <p className="text-[#a0a0a0] mt-1">{coalition.description}</p>
+                    <p className="text-[#a0a0a0] text-sm mt-1 line-clamp-2">{coalition.description}</p>
                   </div>
-                  <div className="text-right shrink-0 ml-6">
-                    <div className="text-2xl font-black text-[#00aaff]">{formatNumber(coalition.totalCoSigners)}</div>
-                    <div className="text-xs text-[#666666] uppercase tracking-wider">Combined Power</div>
+                  <div className="sm:text-right shrink-0">
+                    <div className="text-xl sm:text-2xl font-black text-[#00aaff]">{formatNumber(coalition.totalCoSigners)}</div>
+                    <div className="text-[10px] sm:text-xs text-[#666666] uppercase tracking-wider">Combined Power</div>
                   </div>
                 </div>
                 <div className="flex flex-wrap gap-2 mb-4">

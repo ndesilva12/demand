@@ -137,20 +137,20 @@ export default function DemandDetailPage() {
         )}
 
         {/* Stats */}
-        <div className="grid grid-cols-3 gap-4 mb-8">
-          <div className="bg-[#1a1a1a] border border-[#1e1e1e] rounded-xl p-5 text-center">
-            <div className="text-3xl font-bold text-[#00aaff]">{demand.coSignCount || 0}</div>
-            <div className="text-[#666666] text-xs mt-1 uppercase tracking-wider">Co-Signers</div>
+        <div className="grid grid-cols-3 gap-3 sm:gap-4 mb-8">
+          <div className="bg-[#1a1a1a] border border-[#1e1e1e] rounded-xl p-3 sm:p-5 text-center">
+            <div className="text-xl sm:text-3xl font-bold text-[#00aaff]">{(demand.coSignCount || 0).toLocaleString()}</div>
+            <div className="text-[#666666] text-[10px] sm:text-xs mt-1 uppercase tracking-wider">Co-Signers</div>
           </div>
-          <div className="bg-[#1a1a1a] border border-[#1e1e1e] rounded-xl p-5 text-center">
-            <div className="text-3xl font-bold text-white">
+          <div className="bg-[#1a1a1a] border border-[#1e1e1e] rounded-xl p-3 sm:p-5 text-center">
+            <div className="text-xl sm:text-3xl font-bold text-white">
               {demand.createdAt ? Math.floor((Date.now() - demand.createdAt.getTime()) / (1000 * 60 * 60 * 24)) : 0}
             </div>
-            <div className="text-[#666666] text-xs mt-1 uppercase tracking-wider">Days Active</div>
+            <div className="text-[#666666] text-[10px] sm:text-xs mt-1 uppercase tracking-wider">Days Active</div>
           </div>
-          <div className="bg-[#1a1a1a] border border-[#1e1e1e] rounded-xl p-5 text-center">
-            <div className="text-3xl">{demand.status === 'active' ? '🔥' : demand.status === 'met' ? '✅' : '🔒'}</div>
-            <div className="text-[#666666] text-xs mt-1 uppercase tracking-wider">Status</div>
+          <div className="bg-[#1a1a1a] border border-[#1e1e1e] rounded-xl p-3 sm:p-5 text-center">
+            <div className="text-xl sm:text-3xl">{demand.status === 'active' ? '🔥' : demand.status === 'met' ? '✅' : '🔒'}</div>
+            <div className="text-[#666666] text-[10px] sm:text-xs mt-1 uppercase tracking-wider">Status</div>
           </div>
         </div>
 
