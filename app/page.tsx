@@ -68,6 +68,32 @@ export default function Home() {
           <TrendingDemands />
         </div>
 
+        {/* Victory Showcase */}
+        <div className="mb-24">
+          <div className="flex justify-between items-center mb-8">
+            <h2 className="text-3xl font-bold">
+              🏆 <span className="text-[#00aaff]">Victories</span>
+            </h2>
+            <Link href="/victories" className="text-[#00aaff] hover:underline text-sm font-medium">
+              View all →
+            </Link>
+          </div>
+          <div className="bg-gradient-to-br from-[#00aaff]/5 to-transparent border border-[#00aaff]/20 rounded-2xl p-8 text-center">
+            <div className="text-5xl mb-4">✊</div>
+            <h3 className="text-2xl font-bold text-white mb-3">People Power Works</h3>
+            <p className="text-[#a0a0a0] max-w-xl mx-auto mb-6">
+              When enough people organize around clear demands with measurable outcomes, corporations listen. 
+              Check back as our community grows and victories start rolling in.
+            </p>
+            <Link
+              href="/victories"
+              className="inline-block bg-[#1a1a1a] border border-[#222222] text-[#00aaff] px-6 py-3 rounded-lg text-sm font-medium hover:border-[#00aaff] transition-all"
+            >
+              See Victory Showcase →
+            </Link>
+          </div>
+        </div>
+
         {/* How It Works */}
         <div className="max-w-4xl mx-auto mb-24">
           <h2 className="text-3xl font-bold text-center mb-16">

@@ -40,14 +40,14 @@ export default function TrendingDemands() {
   if (loading) {
     return (
       <div className="text-center py-12">
-        <div className="inline-block animate-spin rounded-full h-12 w-12 border-2 border-brand border-t-transparent"></div>
+        <div className="inline-block animate-spin rounded-full h-12 w-12 border-2 border-[#00aaff] border-t-transparent"></div>
       </div>
     );
   }
 
   if (demands.length === 0) {
     return (
-      <div className="text-center py-12 text-text-muted">
+      <div className="text-center py-12 text-[#666666]">
         <p>No trending demands yet. Be the first to create one!</p>
       </div>
     );
@@ -74,40 +74,40 @@ export default function TrendingDemands() {
           <Link
             key={demand.id}
             href={`/demands/${demand.id}`}
-            className="block bg-surface-raised border border-border-subtle hover:border-brand rounded-xl p-6 transition-all group hover:-translate-y-1"
+            className="block bg-[#1a1a1a] border border-[#1e1e1e] hover:border-[#00aaff] rounded-xl p-6 transition-all group hover:-translate-y-1"
           >
             {/* Heat Indicator */}
             <div className="flex justify-between items-start mb-3">
               <span className={`text-xs px-2 py-1 rounded-full ${
-                heat === 'fire' ? 'bg-danger/20 text-danger border border-danger/30' :
-                heat === 'hot' ? 'bg-warning/20 text-warning border border-warning/30' :
-                heat === 'warm' ? 'bg-brand/20 text-brand border border-brand/30' :
-                'bg-surface-overlay text-text-muted border border-border-default'
+                heat === 'fire' ? 'bg-[#ef4444]/20 text-[#ef4444] border border-[#ef4444]/30' :
+                heat === 'hot' ? 'bg-[#f59e0b]/20 text-[#f59e0b] border border-[#f59e0b]/30' :
+                heat === 'warm' ? 'bg-[#00aaff]/20 text-[#00aaff] border border-[#00aaff]/30' :
+                'bg-[#222222] text-[#666666] border border-[#222222]'
               }`}>
                 {getHeatEmoji(heat)} Trending
               </span>
-              <span className="text-xs text-text-muted">{daysActive}d old</span>
+              <span className="text-xs text-[#666666]">{daysActive}d old</span>
             </div>
 
             {/* Title */}
-            <h3 className="text-lg font-bold text-text-primary group-hover:text-brand transition-colors mb-2 line-clamp-2">
+            <h3 className="text-lg font-bold text-white group-hover:text-[#00aaff] transition-colors mb-2 line-clamp-2">
               {demand.title}
             </h3>
 
             {/* Target */}
-            <p className="text-text-muted text-sm mb-3">
-              vs <span className="text-brand font-semibold">{demand.targetCompany}</span>
+            <p className="text-[#666666] text-sm mb-3">
+              vs <span className="text-[#00aaff] font-semibold">{demand.targetCompany}</span>
             </p>
 
             {/* Stats */}
-            <div className="flex items-center justify-between pt-3 border-t border-border-subtle">
+            <div className="flex items-center justify-between pt-3 border-t border-[#1e1e1e]">
               <div className="flex items-center gap-3">
                 <div>
-                  <div className="text-brand font-bold text-lg">{demand.coSignCount || 0}</div>
-                  <div className="text-text-muted text-xs">co-signers</div>
+                  <div className="text-[#00aaff] font-bold text-lg">{demand.coSignCount || 0}</div>
+                  <div className="text-[#666666] text-xs">co-signers</div>
                 </div>
                 {demand.currentSpokespersonId && (
-                  <div className="text-xs text-text-muted px-2 py-1 bg-surface-overlay rounded-full">
+                  <div className="text-xs text-[#666666] px-2 py-1 bg-[#222222] rounded-full">
                     📢 Has spokesperson
                   </div>
                 )}
