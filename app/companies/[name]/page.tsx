@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { collection, query, where, getDocs, doc, getDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { Demand, CompanyProfile } from '@/types';
+import { getStaticCompany } from '@/lib/static-data';
 
 export default function CompanyProfilePage() {
   const params = useParams();
@@ -25,15 +26,16 @@ export default function CompanyProfilePage() {
         if (companySnap.exists()) {
           setCompany(companySnap.data() as CompanyProfile);
         } else {
-          // Create basic profile if doesn't exist
+          // Use static data fallback
+          const staticCompany = getStaticCompany(companyName);
           const basicProfile: CompanyProfile = {
             name: companyName,
-            description: 'Profile pending completion',
-            industry: 'Unknown',
+            description: staticCompany?.description || 'Company profile pending completion.',
+            industry: staticCompany?.industry || 'Unknown',
             politicalDonations: [],
             controversies: [],
             activeDemands: [],
-            responseRate: 0,
+            responseRate: staticCompany?.responseRate || 0,
           };
           setCompany(basicProfile);
         }
