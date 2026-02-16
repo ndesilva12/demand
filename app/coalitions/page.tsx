@@ -35,16 +35,7 @@ export default function CoalitionsPage() {
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <nav className="flex justify-between items-center mb-12">
-          <Link href="/" className="text-2xl font-bold text-[#00aaff]">demand</Link>
-          <div className="flex items-center gap-6">
-            <Link href="/demands" className="text-[#a0a0a0] hover:text-white text-sm">Browse</Link>
-            <Link href="/pressure-board" className="text-[#a0a0a0] hover:text-white text-sm">Pressure Board</Link>
-            <Link href="/coalitions/create" className="bg-[#00aaff] hover:bg-[#0088cc] text-white px-4 py-2 rounded-lg text-sm font-medium">
-              Form Coalition
-            </Link>
-          </div>
-        </nav>
+        
 
         <div className="text-center mb-12">
           <h1 className="text-4xl sm:text-5xl font-bold mb-4">

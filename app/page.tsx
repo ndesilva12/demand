@@ -11,7 +11,7 @@ export default function Home() {
           <div className="inline-block mb-6 px-4 py-1.5 rounded-full border border-[#222222] bg-[#1a1a1a] text-[#a0a0a0] text-xs tracking-wide uppercase">
             Consumer-Powered Corporate Accountability
           </div>
-          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-tight mb-8">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-tight mb-6 sm:mb-8">
             Give Your Voice{' '}
             <span className="text-[#00aaff]">Real Power</span>
           </h1>

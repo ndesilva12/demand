@@ -71,12 +71,6 @@ export default function CreateDemandPage() {
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-8">
-          <Link href="/" className="text-2xl font-bold text-[#00aaff]">demand</Link>
-          <Link href="/demands" className="text-[#a0a0a0] hover:text-white text-sm transition-colors">← Back</Link>
-        </div>
-
         <h1 className="text-3xl font-bold text-white mb-2">Create a Demand</h1>
         <p className="text-[#a0a0a0] text-sm mb-8">Define clear success criteria. Rally supporters. Force change.</p>
 

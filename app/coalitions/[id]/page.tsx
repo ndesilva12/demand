@@ -42,10 +42,7 @@ export default function CoalitionDetailPage() {
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <nav className="flex justify-between items-center mb-8">
-          <Link href="/" className="text-2xl font-bold text-[#00aaff]">demand</Link>
-          <Link href="/coalitions" className="text-[#a0a0a0] hover:text-white text-sm">← All Coalitions</Link>
-        </nav>
+        <div className="flex items-center gap-2 text-sm text-[#666666] mb-6"><Link href="/coalitions" className="hover:text-[#00aaff]">Coalitions</Link><span>›</span><span className="text-[#a0a0a0]">Details</span></div>
 
         <div className="mb-2">
           <span className="inline-block px-3 py-1 rounded-full bg-[#00aaff]/10 text-[#00aaff] border border-[#00aaff]/20 text-xs font-medium uppercase tracking-wider">

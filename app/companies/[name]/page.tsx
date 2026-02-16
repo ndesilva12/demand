@@ -85,12 +85,11 @@ export default function CompanyProfilePage() {
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-8">
-          <Link href="/" className="text-2xl font-bold text-[#00aaff]">demand</Link>
-          <Link href="/companies" className="text-[#a0a0a0] hover:text-white text-sm transition-colors">
-            ← All Companies
-          </Link>
+        {/* Breadcrumb */}
+        <div className="flex items-center gap-2 text-sm text-[#666666] mb-6">
+          <Link href="/companies" className="hover:text-[#00aaff]">Companies</Link>
+          <span>›</span>
+          <span className="text-[#a0a0a0]">Profile</span>
         </div>
 
         {/* Company Header */}
