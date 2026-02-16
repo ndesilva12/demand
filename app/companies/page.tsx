@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { CompanyProfile } from '@/types';
+import { STATIC_COMPANIES } from '@/lib/static-data';
 
 export default function CompaniesPage() {
   const [companies, setCompanies] = useState<CompanyProfile[]>([]);
@@ -17,9 +18,22 @@ export default function CompaniesPage() {
       try {
         const companiesRef = collection(db, 'companies');
         const snapshot = await getDocs(companiesRef);
-        const fetchedCompanies = snapshot.docs.map(doc => ({
+        let fetchedCompanies = snapshot.docs.map(doc => ({
           ...doc.data(),
         })) as CompanyProfile[];
+        
+        // Use static data as fallback if Firestore is empty
+        if (fetchedCompanies.length === 0) {
+          fetchedCompanies = STATIC_COMPANIES.map(c => ({
+            name: c.name,
+            description: c.description,
+            industry: c.industry,
+            politicalDonations: [],
+            controversies: [],
+            activeDemands: [],
+            responseRate: c.responseRate,
+          })) as CompanyProfile[];
+        }
         setCompanies(fetchedCompanies);
       } catch (error) {
         console.error('Error fetching companies:', error);
