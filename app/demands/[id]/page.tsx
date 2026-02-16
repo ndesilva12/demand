@@ -11,6 +11,11 @@ import { SpokespersonNomination } from '@/components/SpokespersonNomination';
 import MessageBoard from '@/components/MessageBoard';
 import DemandEditProposals from '@/components/DemandEditProposals';
 import ImpactCalculator from '@/components/ImpactCalculator';
+import EscalationLadder from '@/components/EscalationLadder';
+import DemandAnalytics from '@/components/DemandAnalytics';
+import CorporateResponseSection from '@/components/CorporateResponseSection';
+import DemandForkButton from '@/components/DemandForkButton';
+import WhatIfCalculator from '@/components/WhatIfCalculator';
 
 export default function DemandDetailPage() {
   const params = useParams();
@@ -162,8 +167,33 @@ export default function DemandDetailPage() {
           </div>
         </div>
 
+        {/* Escalation Ladder */}
+        <div className="mb-6">
+          <EscalationLadder coSignCount={demand.coSignCount || 0} />
+        </div>
+
         {/* Impact Calculator */}
         <ImpactCalculator demand={demand} />
+
+        {/* What If Calculator */}
+        <div className="mt-6">
+          <WhatIfCalculator companyName={demand.targetCompany} />
+        </div>
+
+        {/* Analytics Dashboard */}
+        <div className="mt-6">
+          <DemandAnalytics demand={demand} />
+        </div>
+
+        {/* Corporate Responses */}
+        <div className="mt-6">
+          <CorporateResponseSection demandId={demandId} companyName={demand.targetCompany} />
+        </div>
+
+        {/* Fork */}
+        <div className="mt-6">
+          <DemandForkButton demand={demand} />
+        </div>
 
         {/* Spokesperson System */}
         <div className="mt-6">

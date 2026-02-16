@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import TrendingDemands from '@/components/TrendingDemands';
+import DemandOfTheDay from '@/components/DemandOfTheDay';
 
 export default function Home() {
   return (
@@ -13,6 +14,15 @@ export default function Home() {
           <div className="flex items-center gap-6">
             <Link href="/demands" className="text-[#a0a0a0] hover:text-white transition-colors text-sm">
               Browse
+            </Link>
+            <Link href="/pressure-board" className="text-[#a0a0a0] hover:text-white transition-colors text-sm">
+              Pressure Board
+            </Link>
+            <Link href="/coalitions" className="text-[#a0a0a0] hover:text-white transition-colors text-sm">
+              Coalitions
+            </Link>
+            <Link href="/weekly" className="text-[#a0a0a0] hover:text-white transition-colors text-sm">
+              Weekly
             </Link>
             <Link href="/login" className="text-[#a0a0a0] hover:text-white transition-colors text-sm">
               Log in
@@ -54,6 +64,9 @@ export default function Home() {
             </Link>
           </div>
         </div>
+
+        {/* Demand of the Day */}
+        <DemandOfTheDay />
 
         {/* Trending Demands */}
         <div className="mb-24">
