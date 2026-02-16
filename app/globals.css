@@ -2,7 +2,35 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  background-color: #0a0a0a;
-  color: #e0e0e0;
+@layer base {
+  * {
+    @apply transition-colors duration-300 ease-in-out;
+  }
+
+  body {
+    @apply bg-dark-background-deep text-dark-text-primary;
+    font-feature-settings: 'ss01' on, 'ss02' on, 'ss03' on;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-primary text-white hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary-dark focus:ring-opacity-50;
+  }
+
+  .btn-secondary {
+    @apply bg-dark-background-light text-primary border border-primary hover:bg-dark-background;
+  }
+}
+
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;  /* Chrome, Safari and Opera */
+  }
 }

@@ -7,72 +7,115 @@ const config: Config = {
     './app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
-    colors: {
-      // Explicitly define all colors to ensure compatibility
-      transparent: 'transparent',
-      current: 'currentColor',
-      black: '#000000',
-      white: '#e0e0e0', // Dark theme "white"
-      
-      // Dark theme color palette
-      gray: {
-        900: '#0a0a0a',    // Darkest background
-        800: '#1a1a1a',    // Dark surface
-        700: '#2a2a2a',    // Border
-        600: '#3a3a3a',    // Muted background
-        500: '#4a4a4a',    // Muted text
-        400: '#a0a0a0',    // Light muted text
-        300: '#b0b0b0',    // Lighter muted text
-        200: '#c0c0c0',    // Very light text
-        100: '#e0e0e0',    // Lightest text (replaces white)
-      },
-      
-      // Primary color
-      primary: {
-        DEFAULT: '#00aaff',
-        dark: '#0088cc',
-        light: '#33bbff',
-      },
-      
-      // Semantic colors
-      blue: {
-        DEFAULT: '#00aaff',
-        dark: '#0088cc',
-      },
-      
-      // Status colors
-      green: {
-        DEFAULT: '#2ecc71',
-        dark: '#27ae60',
-      },
-      red: {
-        DEFAULT: '#e74c3c',
-        dark: '#c0392b',
-      },
-    },
     extend: {
-      backgroundColor: {
-        // Explicit mappings to ensure compatibility
-        'white': '#1a1a1a',
-        'gray-50': '#0a0a0a',
-        'gray-100': '#1e1e1e',
-        'gray-900': '#0a0a0a',
+      // Systematic dark theme color palette
+      colors: {
+        // Core brand color
+        primary: {
+          DEFAULT: '#00aaff',   // Bright blue
+          dark: '#0088cc',      // Deeper blue
+          light: '#33bbff',     // Lighter blue
+        },
+        
+        // Comprehensive grayscale for dark mode
+        dark: {
+          background: {
+            deep: '#0a0a0a',    // Deepest background
+            DEFAULT: '#1a1a1a', // Primary dark surface
+            light: '#2a2a2a',   // Lighter dark surface
+          },
+          text: {
+            primary: '#e0e0e0', // Primary text
+            secondary: '#a0a0a0', // Secondary text
+            muted: '#6a6a6a',   // Muted text
+          },
+          border: {
+            DEFAULT: '#3a3a3a', // Default border
+            light: '#4a4a4a',   // Lighter border
+          },
+        },
       },
-      textColor: {
-        // Explicit text color mappings
-        'white': '#e0e0e0',
-        'gray-900': '#e0e0e0',
-        'gray-800': '#d0d0d0',
-        'gray-700': '#b0b0b0',
-        'gray-600': '#a0a0a0',
+      
+      // Enhanced typography
+      fontSize: {
+        'xs': '0.75rem',
+        'sm': '0.875rem',
+        'base': '1rem',
+        'lg': '1.125rem',
+        'xl': '1.25rem',
+        '2xl': '1.5rem',
+        '3xl': '1.875rem',
+        '4xl': '2.25rem',
+        '5xl': '3rem',
+        '6xl': '4rem',
       },
-      borderColor: {
-        // Border color mappings
-        'white': '#2a2a2a',
-        'gray-300': '#3a3a3a',
-        'gray-700': '#2a2a2a',
+      
+      // Advanced spacing and sizing
+      spacing: {
+        '0.5': '0.125rem',
+        '1.5': '0.375rem',
+        '2.5': '0.625rem',
+        '3.5': '0.875rem',
+      },
+      
+      // Sophisticated shadows for depth
+      boxShadow: {
+        'dark-sm': '0 1px 2px 0 rgba(0, 170, 255, 0.05)',
+        'dark-md': '0 4px 6px -1px rgba(0, 170, 255, 0.1), 0 2px 4px -1px rgba(0, 170, 255, 0.06)',
+        'dark-lg': '0 10px 15px -3px rgba(0, 170, 255, 0.1), 0 4px 6px -2px rgba(0, 170, 255, 0.05)',
+      },
+      
+      // Transition and animation defaults
+      transitionProperty: {
+        'default': 'background-color, border-color, color, fill, stroke, opacity, box-shadow, transform',
+      },
+      transitionTimingFunction: {
+        'default': 'cubic-bezier(0.4, 0, 0.2, 1)',
+      },
+      transitionDuration: {
+        'default': '300ms',
+      },
+      
+      // Responsive breakpoints
+      screens: {
+        'xs': '475px',
+        'sm': '640px',
+        'md': '768px',
+        'lg': '1024px',
+        'xl': '1280px',
+        '2xl': '1536px',
       },
     },
   },
-  plugins: [],
+  
+  // Advanced plugins for enhanced functionality
+  plugins: [
+    // Custom plugin for dark mode utility classes
+    function({ addUtilities }) {
+      const darkUtilities = {
+        '.bg-dark': {
+          backgroundColor: '#1a1a1a',
+        },
+        '.text-dark': {
+          color: '#e0e0e0',
+        },
+        '.border-dark': {
+          borderColor: '#3a3a3a',
+        },
+        '.btn-primary': {
+          backgroundColor: '#00aaff',
+          color: 'white',
+          '&:hover': {
+            backgroundColor: '#0088cc',
+          },
+        },
+      }
+      addUtilities(darkUtilities)
+    }
+  ],
+  
+  // Ensure dark mode is always active
+  darkMode: 'class',
 }
+
+export default config
