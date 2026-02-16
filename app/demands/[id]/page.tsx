@@ -14,6 +14,8 @@ import {
 import { db } from '@/lib/firebase';
 import { useAuth } from '@/contexts/AuthContext';
 import { Demand } from '@/types';
+import MessageBoard from '@/components/MessageBoard';
+import ShareButtons from '@/components/ShareButtons';
 
 export default function DemandDetailPage() {
   const params = useParams();
@@ -219,6 +221,12 @@ export default function DemandDetailPage() {
             </p>
           </div>
 
+          {/* Share Buttons */}
+          <ShareButtons
+            title={`${demand.title} - Target: ${demand.targetCompany}`}
+            url={typeof window !== 'undefined' ? window.location.href : ''}
+          />
+
           {/* Creator Info */}
           <div className="bg-white p-6 rounded-xl shadow-md mb-8">
             <div className="flex justify-between items-center">
@@ -241,12 +249,9 @@ export default function DemandDetailPage() {
             </div>
           </div>
 
-          {/* Message Board (Placeholder) */}
+          {/* Message Board */}
           <div className="bg-white p-8 rounded-xl shadow-md">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Discussion</h2>
-            <p className="text-gray-500 text-center py-8">
-              Message board coming soon. Discuss strategy, share updates, coordinate action.
-            </p>
+            <MessageBoard demandId={demandId} />
           </div>
         </div>
       </div>

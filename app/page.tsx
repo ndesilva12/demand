@@ -7,7 +7,13 @@ export default function Home() {
       <div className="container mx-auto px-4 py-16">
         <nav className="flex justify-between items-center mb-16">
           <h1 className="text-3xl font-bold text-purple-600">Demand</h1>
-          <div className="space-x-4">
+          <div className="flex items-center space-x-6">
+            <Link href="/demands" className="text-gray-700 hover:text-purple-600">
+              Browse
+            </Link>
+            <Link href="/victories" className="text-gray-700 hover:text-purple-600">
+              Victories
+            </Link>
             <Link href="/login" className="text-gray-700 hover:text-purple-600">
               Login
             </Link>

@@ -1,0 +1,183 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { collection, getDocs, query, where, orderBy } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
+import { Demand } from '@/types';
+
+export default function VictoriesPage() {
+  const [victories, setVictories] = useState<Demand[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchVictories = async () => {
+      try {
+        const q = query(
+          collection(db, 'demands'),
+          where('status', '==', 'met'),
+          orderBy('updatedAt', 'desc')
+        );
+        const snapshot = await getDocs(q);
+        const victoriesData = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+          createdAt: doc.data().createdAt?.toDate(),
+          updatedAt: doc.data().updatedAt?.toDate(),
+        })) as Demand[];
+        setVictories(victoriesData);
+      } catch (error) {
+        console.error('Error fetching victories:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchVictories();
+  }, []);
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50">
+      <div className="container mx-auto px-4 py-8">
+        {/* Header */}
+        <div className="flex justify-between items-center mb-8">
+          <Link href="/" className="text-3xl font-bold text-purple-600">
+            Demand
+          </Link>
+          <div className="space-x-4">
+            <Link href="/demands" className="text-gray-700 hover:text-purple-600">
+              Browse Demands
+            </Link>
+            <Link href="/dashboard" className="text-gray-700 hover:text-purple-600">
+              Dashboard
+            </Link>
+          </div>
+        </div>
+
+        {/* Hero */}
+        <div className="text-center mb-12">
+          <div className="text-7xl mb-4">🏆</div>
+          <h1 className="text-5xl font-bold text-gray-900 mb-4">Victory Showcase</h1>
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            Demands that won. People spoke, companies listened, change happened.
+          </p>
+        </div>
+
+        {/* Stats Bar */}
+        {!loading && victories.length > 0 && (
+          <div className="bg-white p-8 rounded-xl shadow-md mb-12">
+            <div className="grid grid-cols-3 gap-8 text-center">
+              <div>
+                <div className="text-4xl font-bold text-green-600">{victories.length}</div>
+                <div className="text-gray-600 mt-2">Victories</div>
+              </div>
+              <div>
+                <div className="text-4xl font-bold text-purple-600">
+                  {victories.reduce((sum, v) => sum + (v.coSignCount || 0), 0)}
+                </div>
+                <div className="text-gray-600 mt-2">Total Co-Signers</div>
+              </div>
+              <div>
+                <div className="text-4xl font-bold text-blue-600">
+                  {new Set(victories.map((v) => v.targetCompany)).size}
+                </div>
+                <div className="text-gray-600 mt-2">Companies Engaged</div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Victories List */}
+        {loading ? (
+          <div className="text-center py-12">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+            <p className="mt-4 text-gray-600">Loading victories...</p>
+          </div>
+        ) : victories.length === 0 ? (
+          <div className="bg-white rounded-xl p-12 text-center shadow-md">
+            <div className="text-6xl mb-4">🎯</div>
+            <h3 className="text-2xl font-bold text-gray-900 mb-2">No victories yet</h3>
+            <p className="text-gray-600 mb-6">
+              Be the first to create a winning demand and make real change!
+            </p>
+            <Link
+              href="/create"
+              className="inline-block bg-purple-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-purple-700 transition"
+            >
+              Create a Demand
+            </Link>
+          </div>
+        ) : (
+          <div className="grid gap-6">
+            {victories.map((victory) => (
+              <Link
+                key={victory.id}
+                href={`/demands/${victory.id}`}
+                className="bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition border-l-4 border-green-500"
+              >
+                <div className="flex justify-between items-start mb-4">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-3">
+                      <span className="text-3xl">✅</span>
+                      <h3 className="text-2xl font-bold text-gray-900">{victory.title}</h3>
+                    </div>
+                    <p className="text-lg text-gray-600 mb-3">
+                      Target:{' '}
+                      <span className="font-semibold text-purple-600">
+                        {victory.targetCompany}
+                      </span>
+                    </p>
+                  </div>
+                </div>
+
+                <p className="text-gray-700 mb-6 leading-relaxed">{victory.description}</p>
+
+                <div className="bg-green-50 p-4 rounded-lg mb-6">
+                  <h4 className="font-semibold text-green-900 mb-2">Success Achieved:</h4>
+                  <p className="text-green-800">{victory.successCriteria}</p>
+                </div>
+
+                <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                  <div className="flex items-center gap-6 text-sm">
+                    <div className="flex items-center gap-2">
+                      <span className="text-2xl font-bold text-green-600">
+                        {victory.coSignCount || 0}
+                      </span>
+                      <span className="text-gray-600">co-signers supported this</span>
+                    </div>
+                    <div className="text-gray-500">
+                      By <span className="font-semibold">{victory.creatorName}</span>
+                    </div>
+                  </div>
+                  <div className="text-sm text-gray-400">
+                    Won on{' '}
+                    {victory.updatedAt
+                      ? new Date(victory.updatedAt).toLocaleDateString('en-US', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                        })
+                      : 'Unknown'}
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
+
+        {/* CTA */}
+        {!loading && victories.length > 0 && (
+          <div className="mt-12 text-center">
+            <p className="text-gray-600 mb-4">Ready to create the next victory?</p>
+            <Link
+              href="/create"
+              className="inline-block bg-purple-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-purple-700 transition"
+            >
+              Create a Demand
+            </Link>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

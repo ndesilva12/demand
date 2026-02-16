@@ -10,6 +10,7 @@ export default function DemandsPage() {
   const [demands, setDemands] = useState<Demand[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     const fetchDemands = async () => {
@@ -34,8 +35,23 @@ export default function DemandsPage() {
   }, []);
 
   const filteredDemands = demands.filter((demand) => {
-    if (filter === 'all') return demand.visibility === 'public';
-    return demand.status === filter && demand.visibility === 'public';
+    // Filter by visibility
+    if (demand.visibility !== 'public') return false;
+
+    // Filter by status
+    if (filter !== 'all' && demand.status !== filter) return false;
+
+    // Filter by search query
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      return (
+        demand.title.toLowerCase().includes(query) ||
+        demand.description.toLowerCase().includes(query) ||
+        demand.targetCompany.toLowerCase().includes(query)
+      );
+    }
+
+    return true;
   });
 
   return (
@@ -65,6 +81,17 @@ export default function DemandsPage() {
         <p className="text-gray-600 mb-8">
           Explore active demands and co-sign those you support.
         </p>
+
+        {/* Search Bar */}
+        <div className="mb-6">
+          <input
+            type="text"
+            placeholder="Search demands by title, company, or description..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full px-6 py-3 border-2 border-gray-200 rounded-lg focus:border-purple-500 focus:outline-none transition text-lg"
+          />
+        </div>
 
         {/* Filters */}
         <div className="flex gap-4 mb-8">
@@ -132,7 +159,14 @@ export default function DemandsPage() {
                       {demand.title}
                     </h3>
                     <p className="text-sm text-gray-500">
-                      Target: <span className="font-semibold">{demand.targetCompany}</span>
+                      Target:{' '}
+                      <Link
+                        href={`/companies/${encodeURIComponent(demand.targetCompany)}`}
+                        className="font-semibold text-purple-600 hover:underline"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        {demand.targetCompany}
+                      </Link>
                     </p>
                   </div>
                   <div
