@@ -39,8 +39,21 @@ export default function TrendingDemands() {
 
   if (loading) {
     return (
-      <div className="text-center py-12">
-        <div className="inline-block animate-spin rounded-full h-12 w-12 border-2 border-[#00aaff] border-t-transparent"></div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {[1,2,3].map(i => (
+          <div key={i} className="bg-[#1a1a1a] border border-[#1e1e1e] rounded-xl p-5">
+            <div className="flex justify-between mb-3">
+              <div className="skeleton h-5 w-24 rounded-full" />
+              <div className="skeleton h-4 w-12 rounded" />
+            </div>
+            <div className="skeleton h-6 w-full rounded mb-2" />
+            <div className="skeleton h-6 w-3/4 rounded mb-3" />
+            <div className="skeleton h-4 w-32 rounded mb-3" />
+            <div className="pt-3 border-t border-[#1e1e1e]">
+              <div className="skeleton h-5 w-20 rounded" />
+            </div>
+          </div>
+        ))}
       </div>
     );
   }
@@ -63,7 +76,7 @@ export default function TrendingDemands() {
   };
 
   return (
-    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
       {demands.map((demand) => {
         const heat = getHeatLevel(demand);
         const daysActive = demand.createdAt 
@@ -74,7 +87,7 @@ export default function TrendingDemands() {
           <Link
             key={demand.id}
             href={`/demands/${demand.id}`}
-            className="block bg-[#1a1a1a] border border-[#1e1e1e] hover:border-[#00aaff] rounded-xl p-6 transition-all group hover:-translate-y-1"
+            className="block bg-[#1a1a1a] border border-[#1e1e1e] hover:border-[#00aaff]/30 rounded-xl p-4 sm:p-5 transition-all group card-hover"
           >
             {/* Heat Indicator */}
             <div className="flex justify-between items-start mb-3">
@@ -103,7 +116,7 @@ export default function TrendingDemands() {
             <div className="flex items-center justify-between pt-3 border-t border-[#1e1e1e]">
               <div className="flex items-center gap-3">
                 <div>
-                  <div className="text-[#00aaff] font-bold text-lg">{demand.coSignCount || 0}</div>
+                  <div className="text-[#00aaff] font-bold text-lg">{(demand.coSignCount || 0).toLocaleString()}</div>
                   <div className="text-[#666666] text-xs">co-signers</div>
                 </div>
                 {demand.currentSpokespersonId && (

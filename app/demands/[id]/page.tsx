@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { showToast } from '@/components/Layout';
 import { doc, getDoc, updateDoc, arrayUnion, arrayRemove, increment } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { useAuth } from '@/contexts/AuthContext';
@@ -54,12 +55,15 @@ export default function DemandDetailPage() {
       if (hasCoSigned) {
         await updateDoc(demandRef, { coSigners: arrayRemove(user.uid), coSignCount: increment(-1) });
         setDemand({ ...demand, coSigners: demand.coSigners.filter((id) => id !== user.uid), coSignCount: (demand.coSignCount || 0) - 1 });
+        showToast('Co-signature removed', 'info');
       } else {
         await updateDoc(demandRef, { coSigners: arrayUnion(user.uid), coSignCount: increment(1) });
         setDemand({ ...demand, coSigners: [...(demand.coSigners || []), user.uid], coSignCount: (demand.coSignCount || 0) + 1 });
+        showToast('✊ Co-signed! You\'re making a difference.', 'success');
       }
     } catch (error) {
       console.error('Error co-signing:', error);
+      showToast('Failed to co-sign. Please try again.', 'error');
     } finally {
       setCoSigning(false);
     }
