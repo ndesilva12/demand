@@ -9,7 +9,7 @@
 }
 
 @layer utilities {
-  /* Explicit dark theme utility classes */
+  /* Dark theme utility classes */
   .bg-dark { @apply bg-gray-900; }
   .text-dark { @apply text-gray-100; }
   .border-dark { @apply border-gray-700; }
@@ -21,4 +21,9 @@
   .btn-secondary { 
     @apply bg-gray-800 text-primary border border-primary hover:bg-gray-700; 
   }
+
+  /* Ensure default classes work in dark mode */
+  .text-white { @apply text-gray-100; }
+  .bg-white { @apply bg-gray-800; }
+  .border-white { @apply border-gray-700; }
 }
