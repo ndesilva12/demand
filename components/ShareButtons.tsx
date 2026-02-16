@@ -32,8 +32,8 @@ export default function ShareButtons({ title, url }: ShareButtonsProps) {
   };
 
   return (
-    <div className="bg-white p-6 rounded-xl shadow-md mb-8">
-      <h3 className="text-lg font-bold text-gray-900 mb-4">Share This Demand</h3>
+    <div className="bg-[#1a1a1a] p-6 rounded-xl border border-[#222222] mb-8">
+      <h3 className="text-lg font-bold text-white mb-4">Share This Demand</h3>
       <div className="flex flex-wrap gap-3">
         <a
           href={shareLinks.twitter}
