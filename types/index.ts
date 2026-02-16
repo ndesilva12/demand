@@ -4,6 +4,27 @@ export interface User {
   displayName?: string;
   photoURL?: string;
   createdAt: Date;
+  reputation?: number;
+  verifiedStatus?: 'unverified' | 'verified' | 'trusted';
+}
+
+export interface SpokespersonVote {
+  userId: string;
+  vote: 'approve' | 'reject';
+  timestamp: Date;
+}
+
+export interface DemandNegotiation {
+  id: string;
+  demandId: string;
+  companyName: string;
+  status: 'pending' | 'in-progress' | 'resolved' | 'stalled';
+  initiatedBy: 'company' | 'spokesperson';
+  messages: {
+    sender: 'company' | 'spokesperson';
+    message: string;
+    timestamp: Date;
+  }[];
 }
 
 export interface Demand {
@@ -12,41 +33,50 @@ export interface Demand {
   description: string;
   targetCompany: string;
   successCriteria: string;
+  
+  // Core demand metadata
   creatorId: string;
   creatorName: string;
   createdAt: Date;
   updatedAt: Date;
-  status: 'active' | 'met' | 'closed';
-  coSigners: string[]; // array of user IDs
-  coSignCount: number;
-  tags?: string[];
+  
+  // Spokesperson system
+  currentSpokespersonId: string;
+  spokespersonNominationDate?: Date;
+  spokespersonVotes: SpokespersonVote[];
+  spokespersonVotingOpen: boolean;
+  spokespersonVotingEndDate?: Date;
+  
+  // Demand status
+  status: 'draft' | 'active' | 'negotiation' | 'met' | 'closed';
   visibility: 'public' | 'private';
+  
+  // Collaboration
+  coSigners: string[];
+  coSignCount: number;
+  
+  // Negotiations
+  activeNegotiations: string[]; // IDs of DemandNegotiation
+  
+  // Metadata
+  tags?: string[];
 }
 
-export interface MessageBoardPost {
-  id: string;
-  demandId: string;
-  authorId: string;
-  authorName: string;
-  content: string;
-  createdAt: Date;
-  replies?: MessageBoardPost[];
-}
-
-export interface Edit {
-  id: string;
-  demandId: string;
-  proposerId: string;
-  proposerName: string;
-  changes: {
-    field: string;
-    oldValue: string;
-    newValue: string;
+export interface CompanyProfile {
+  name: string;
+  description: string;
+  industry: string;
+  politicalDonations: {
+    recipient: string;
+    amount: number;
+    year: number;
   }[];
-  status: 'pending' | 'approved' | 'rejected';
-  votes: {
-    userId: string;
-    vote: 'approve' | 'reject';
+  controversies: {
+    title: string;
+    description: string;
+    year: number;
+    sources: string[];
   }[];
-  createdAt: Date;
+  activeDemands: string[]; // Demand IDs
+  responseRate: number; // Percentage of demands responded to
 }
