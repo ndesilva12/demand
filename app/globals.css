@@ -1,7 +1,26 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #00aaff;
+  --color-primary-dark: #0088cc;
+  --color-primary-light: #33bbff;
+}
 
 body {
-  @apply bg-dark-bg text-dark-text;
+  background-color: #0a0a0a;
+  color: #e0e0e0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Dark theme input styling */
+input, textarea, select {
+  background-color: #1a1a1a;
+  color: #e0e0e0;
+  border-color: #333;
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: #00aaff;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 170, 255, 0.3);
 }
