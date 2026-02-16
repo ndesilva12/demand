@@ -19,16 +19,16 @@ export default function Home() {
             Create structured demands with measurable outcomes. Build coalitions. 
             Force corporations to change. This isn&apos;t a petition — it&apos;s organized pressure.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
             <Link
               href="/demands"
-              className="bg-[#00aaff] hover:bg-[#0088cc] text-white px-8 py-4 rounded-xl text-lg font-semibold transition-all hover:shadow-xl hover:shadow-[#00aaff]/30 hover:-translate-y-0.5"
+              className="bg-gradient-to-r from-[#00aaff] to-[#0066cc] hover:from-[#0088cc] hover:to-[#0055aa] text-white px-8 py-4 rounded-xl text-base sm:text-lg font-semibold transition-all hover:shadow-xl hover:shadow-[#00aaff]/30 hover:-translate-y-0.5 text-center"
             >
               Browse Demands
             </Link>
             <Link
               href="/create"
-              className="bg-[#1a1a1a] border border-[#222222] text-white px-8 py-4 rounded-xl text-lg font-semibold transition-all hover:border-[#00aaff] hover:text-[#00aaff] hover:-translate-y-0.5"
+              className="bg-[#1a1a1a] border border-[#222222] text-white px-8 py-4 rounded-xl text-base sm:text-lg font-semibold transition-all hover:border-[#00aaff] hover:text-[#00aaff] hover:-translate-y-0.5 text-center"
             >
               Start a Demand
             </Link>

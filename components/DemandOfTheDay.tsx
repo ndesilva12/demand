@@ -43,20 +43,20 @@ export default function DemandOfTheDay() {
         <div className="h-px flex-1 bg-[#222222]" />
       </div>
       <Link href={`/demands/${demand.id}`}
-        className="block bg-gradient-to-br from-[#f59e0b]/10 via-[#1a1a1a] to-[#00aaff]/10 border border-[#f59e0b]/20 rounded-2xl p-8 hover:border-[#f59e0b]/40 transition-all group">
+        className="block bg-gradient-to-br from-[#f59e0b]/10 via-[#1a1a1a] to-[#00aaff]/10 border border-[#f59e0b]/20 rounded-2xl p-5 sm:p-8 hover:border-[#f59e0b]/40 transition-all group card-hover">
         <div className="flex justify-between items-start">
           <div className="flex-1">
-            <h3 className="text-2xl font-bold text-white group-hover:text-[#f59e0b] transition-colors mb-2">
+            <h3 className="text-xl sm:text-2xl font-bold text-white group-hover:text-[#f59e0b] transition-colors mb-2">
               {demand.title}
             </h3>
             <p className="text-[#a0a0a0] mb-4 line-clamp-2">{demand.description}</p>
             <div className="flex items-center gap-4 text-sm">
               <span className="text-[#00aaff] font-medium">vs {demand.targetCompany}</span>
               <span className="text-[#666666]">·</span>
-              <span className="text-[#a0a0a0]">{formatNumber(demand.coSignCount || 0)} co-signers</span>
+              <span className="text-[#a0a0a0]">{(demand.coSignCount || 0).toLocaleString()} co-signers</span>
             </div>
           </div>
-          <div className="text-6xl opacity-20 group-hover:opacity-40 transition-opacity ml-6">⭐</div>
+          <div className="text-4xl sm:text-6xl opacity-20 group-hover:opacity-40 transition-opacity ml-4 sm:ml-6 hidden sm:block">⭐</div>
         </div>
       </Link>
     </div>
