@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import TrendingDemands from '@/components/TrendingDemands';
 
 export default function Home() {
   return (
@@ -54,19 +55,17 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Stats Bar */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto mb-24">
-          {[
-            { label: 'Active Demands', value: '6', color: 'text-brand' },
-            { label: 'Co-Signatures', value: '19', color: 'text-brand' },
-            { label: 'Companies Targeted', value: '6', color: 'text-brand' },
-            { label: 'Demands Won', value: '0', color: 'text-success' },
-          ].map((stat) => (
-            <div key={stat.label} className="bg-surface-raised border border-border-subtle rounded-xl p-5 text-center hover:border-border-default transition-colors">
-              <div className={`text-3xl font-bold ${stat.color}`}>{stat.value}</div>
-              <div className="text-text-muted text-xs mt-1 uppercase tracking-wider">{stat.label}</div>
-            </div>
-          ))}
+        {/* Trending Demands */}
+        <div className="mb-24">
+          <div className="flex justify-between items-center mb-8">
+            <h2 className="text-3xl font-bold">
+              🔥 Trending <span className="text-brand">Demands</span>
+            </h2>
+            <Link href="/demands" className="text-brand hover:underline text-sm font-medium">
+              View all →
+            </Link>
+          </div>
+          <TrendingDemands />
         </div>
 
         {/* How It Works */}

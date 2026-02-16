@@ -7,6 +7,10 @@ import { doc, getDoc, updateDoc, arrayUnion, arrayRemove, increment } from 'fire
 import { db } from '@/lib/firebase';
 import { useAuth } from '@/contexts/AuthContext';
 import { Demand } from '@/types';
+import { SpokespersonNomination } from '@/components/SpokespersonNomination';
+import MessageBoard from '@/components/MessageBoard';
+import DemandEditProposals from '@/components/DemandEditProposals';
+import ImpactCalculator from '@/components/ImpactCalculator';
 
 export default function DemandDetailPage() {
   const params = useParams();
@@ -158,10 +162,37 @@ export default function DemandDetailPage() {
           </div>
         </div>
 
-        {/* Discussion Placeholder */}
-        <div className="bg-surface-raised border border-border-subtle rounded-xl p-6">
-          <h2 className="text-sm font-medium text-text-muted uppercase tracking-wider mb-3">Discussion</h2>
-          <p className="text-text-muted text-sm text-center py-8">Message board coming soon.</p>
+        {/* Impact Calculator */}
+        <ImpactCalculator demand={demand} />
+
+        {/* Spokesperson System */}
+        <div className="mt-6">
+          <SpokespersonNomination demand={demand} onUpdate={() => {
+          // Refresh demand data
+          const demandRef = doc(db, 'demands', demandId);
+          getDoc(demandRef).then(snap => {
+            if (snap.exists()) {
+              setDemand({ id: snap.id, ...snap.data(), createdAt: snap.data().createdAt?.toDate(), updatedAt: snap.data().updatedAt?.toDate() } as Demand);
+            }
+          });
+          }} />
+        </div>
+
+        {/* Democratic Editing */}
+        <div className="mt-6">
+          <DemandEditProposals demand={demand} onDemandUpdate={() => {
+            const demandRef = doc(db, 'demands', demandId);
+            getDoc(demandRef).then(snap => {
+              if (snap.exists()) {
+                setDemand({ id: snap.id, ...snap.data(), createdAt: snap.data().createdAt?.toDate(), updatedAt: snap.data().updatedAt?.toDate() } as Demand);
+              }
+            });
+          }} />
+        </div>
+
+        {/* Message Board */}
+        <div className="mt-6">
+          <MessageBoard demandId={demandId} />
         </div>
       </div>
     </div>

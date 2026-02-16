@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   collection,
   addDoc,
@@ -9,7 +9,10 @@ import {
   orderBy,
   onSnapshot,
   serverTimestamp,
-  Timestamp,
+  doc,
+  updateDoc,
+  arrayUnion,
+  increment,
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { useAuth } from '@/contexts/AuthContext';
@@ -21,14 +24,18 @@ interface Message {
   authorName: string;
   content: string;
   createdAt: Date;
+  replyTo?: string;
+  replies?: string[];
 }
 
 export default function MessageBoard({ demandId }: { demandId: string }) {
   const { user } = useAuth();
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
+  const [replyToId, setReplyToId] = useState<string | null>(null);
   const [posting, setPosting] = useState(false);
   const [loading, setLoading] = useState(true);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const messagesRef = collection(db, 'messages');
@@ -49,6 +56,11 @@ export default function MessageBoard({ demandId }: { demandId: string }) {
 
         setMessages(fetchedMessages);
         setLoading(false);
+        
+        // Auto-scroll to bottom on new messages
+        setTimeout(() => {
+          messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
       },
       (error) => {
         console.error('Error fetching messages:', error);
@@ -68,15 +80,34 @@ export default function MessageBoard({ demandId }: { demandId: string }) {
 
     try {
       const messagesRef = collection(db, 'messages');
-      await addDoc(messagesRef, {
+      const messageData: any = {
         demandId,
         authorId: user.uid,
         authorName: user.displayName || user.email?.split('@')[0] || 'Anonymous',
         content: newMessage.trim(),
         createdAt: serverTimestamp(),
+      };
+
+      if (replyToId) {
+        messageData.replyTo = replyToId;
+        
+        // Add reply to parent message
+        const parentRef = doc(db, 'messages', replyToId);
+        await updateDoc(parentRef, {
+          replies: arrayUnion(replyToId),
+        });
+      }
+
+      await addDoc(messagesRef, messageData);
+
+      // Award reputation for participation
+      const userRef = doc(db, 'users', user.uid);
+      await updateDoc(userRef, {
+        reputation: increment(2),
       });
 
       setNewMessage('');
+      setReplyToId(null);
     } catch (error) {
       console.error('Error posting message:', error);
       alert('Failed to post message. Please try again.');
@@ -104,76 +135,123 @@ export default function MessageBoard({ demandId }: { demandId: string }) {
     });
   };
 
+  const getReplyToMessage = (replyToId: string) => {
+    return messages.find(m => m.id === replyToId);
+  };
+
   return (
-    <div>
-      <h2 className="text-2xl font-bold text-gray-900 mb-6">Discussion</h2>
+    <div className="bg-surface-raised border border-border-subtle rounded-xl p-6">
+      <h2 className="text-lg font-bold text-text-primary mb-4 uppercase tracking-wider">💬 Discussion</h2>
 
       {/* Message List */}
-      <div className="space-y-4 mb-6 max-h-96 overflow-y-auto">
+      <div className="space-y-3 mb-6 max-h-[500px] overflow-y-auto pr-2">
         {loading ? (
           <div className="text-center py-8">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-2 border-brand border-t-transparent"></div>
           </div>
         ) : messages.length === 0 ? (
-          <div className="text-center py-8 text-gray-500">
+          <div className="text-center py-8 text-text-muted">
             <p className="mb-2">No messages yet. Start the conversation!</p>
-            <p className="text-sm">Discuss strategy, share updates, coordinate action.</p>
+            <p className="text-xs">Discuss strategy, share updates, coordinate action.</p>
           </div>
         ) : (
-          messages.map((message) => (
-            <div
-              key={message.id}
-              className={`p-4 rounded-lg ${
-                message.authorId === user?.uid ? 'bg-purple-50' : 'bg-gray-50'
-              }`}
-            >
-              <div className="flex justify-between items-start mb-2">
-                <div className="flex items-center space-x-2">
-                  <div className="w-8 h-8 bg-gradient-to-br from-purple-400 to-blue-400 rounded-full flex items-center justify-center text-white text-sm font-bold">
-                    {message.authorName.charAt(0).toUpperCase()}
+          <>
+            {messages.map((message) => {
+              const replyTo = message.replyTo ? getReplyToMessage(message.replyTo) : null;
+              return (
+                <div
+                  key={message.id}
+                  className={`p-4 rounded-lg border transition-all ${
+                    message.authorId === user?.uid 
+                      ? 'bg-brand/5 border-brand/30' 
+                      : 'bg-surface-overlay border-border-subtle hover:border-border-default'
+                  }`}
+                >
+                  {/* Reply Context */}
+                  {replyTo && (
+                    <div className="mb-2 pl-3 border-l-2 border-border-default">
+                      <div className="text-xs text-text-muted">
+                        Replying to <span className="text-brand">{replyTo.authorName}</span>
+                      </div>
+                      <div className="text-xs text-text-muted truncate">{replyTo.content}</div>
+                    </div>
+                  )}
+
+                  <div className="flex justify-between items-start mb-2">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-8 h-8 bg-gradient-to-br from-brand to-brand-dark rounded-full flex items-center justify-center text-white text-sm font-bold">
+                        {message.authorName.charAt(0).toUpperCase()}
+                      </div>
+                      <div>
+                        <span className="font-semibold text-text-primary text-sm">
+                          {message.authorName}
+                          {message.authorId === user?.uid && (
+                            <span className="ml-2 text-xs text-brand">(You)</span>
+                          )}
+                        </span>
+                        <div className="text-xs text-text-muted">{formatTime(message.createdAt)}</div>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => setReplyToId(message.id)}
+                      className="text-xs text-text-muted hover:text-brand transition-colors"
+                    >
+                      Reply
+                    </button>
                   </div>
-                  <span className="font-semibold text-gray-900">
-                    {message.authorName}
-                    {message.authorId === user?.uid && (
-                      <span className="ml-2 text-xs text-purple-600">(You)</span>
-                    )}
-                  </span>
+                  <p className="text-text-secondary ml-10 whitespace-pre-wrap text-sm">{message.content}</p>
                 </div>
-                <span className="text-xs text-gray-500">{formatTime(message.createdAt)}</span>
-              </div>
-              <p className="text-gray-700 ml-10 whitespace-pre-wrap">{message.content}</p>
-            </div>
-          ))
+              );
+            })}
+            <div ref={messagesEndRef} />
+          </>
         )}
       </div>
 
       {/* Post Form */}
       {user ? (
         <form onSubmit={handlePost} className="mt-6">
+          {replyToId && (
+            <div className="mb-2 flex items-center justify-between bg-surface-overlay border border-border-default rounded-lg px-3 py-2">
+              <span className="text-xs text-text-muted">
+                Replying to message...
+              </span>
+              <button
+                type="button"
+                onClick={() => setReplyToId(null)}
+                className="text-xs text-danger hover:underline"
+              >
+                Cancel
+              </button>
+            </div>
+          )}
           <div className="mb-3">
             <textarea
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
               placeholder="Share your thoughts, strategy, or updates..."
               rows={3}
-              className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-purple-500 focus:outline-none transition"
+              className="w-full px-4 py-3 bg-surface-overlay border border-border-default rounded-lg focus:border-brand focus:ring-2 focus:ring-brand/20 text-text-primary placeholder-text-muted transition-all resize-none"
               disabled={posting}
             />
           </div>
-          <div className="flex justify-end">
+          <div className="flex justify-between items-center">
+            <div className="text-xs text-text-muted">
+              {newMessage.length}/500 characters
+            </div>
             <button
               type="submit"
-              disabled={posting || !newMessage.trim()}
-              className="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition disabled:opacity-50 disabled:cursor-not-allowed font-semibold"
+              disabled={posting || !newMessage.trim() || newMessage.length > 500}
+              className="px-6 py-2 bg-brand hover:bg-brand-dark text-white rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed font-semibold"
             >
               {posting ? 'Posting...' : 'Post Message'}
             </button>
           </div>
         </form>
       ) : (
-        <div className="mt-6 p-4 bg-gray-50 rounded-lg text-center">
-          <p className="text-gray-600">
-            <a href="/login" className="text-purple-600 hover:underline font-semibold">
+        <div className="mt-6 p-4 bg-surface-overlay border border-border-subtle rounded-lg text-center">
+          <p className="text-text-secondary text-sm">
+            <a href="/login" className="text-brand hover:underline font-semibold">
               Sign in
             </a>{' '}
             to join the discussion
