@@ -79,10 +79,10 @@ export default function Home() {
 
         {/* How It Works */}
         <div className="max-w-4xl mx-auto mb-24">
-          <h2 className="text-3xl font-bold text-center mb-16">
+          <h2 className="text-2xl sm:text-3xl font-bold text-center mb-8 sm:mb-16">
             How <span className="text-[#00aaff]">Demand</span> Works
           </h2>
-          <div className="grid md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
             {[
               { step: '01', title: 'Create', desc: 'Write a demand with clear, measurable success criteria targeting a specific corporation.', icon: '🎯' },
               { step: '02', title: 'Rally', desc: 'Build support. Co-signers amplify the demand and add legitimacy.', icon: '✊' },

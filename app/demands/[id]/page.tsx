@@ -67,8 +67,21 @@ export default function DemandDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
-        <div className="animate-pulse text-[#666666]">Loading...</div>
+      <div className="min-h-screen bg-[#0a0a0a]">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="skeleton h-4 w-48 rounded mb-6" />
+          <div className="skeleton h-6 w-24 rounded-full mb-4" />
+          <div className="skeleton h-10 w-3/4 rounded mb-3" />
+          <div className="skeleton h-4 w-48 rounded mb-8" />
+          <div className="skeleton h-12 w-48 rounded-xl mb-8" />
+          <div className="bg-[#1a1a1a] border border-[#1e1e1e] rounded-xl p-6 mb-6">
+            <div className="skeleton h-4 w-full rounded mb-2" />
+            <div className="skeleton h-4 w-full rounded mb-2" />
+            <div className="skeleton h-4 w-3/4 rounded mb-2" />
+            <div className="skeleton h-4 w-full rounded mb-2" />
+            <div className="skeleton h-4 w-2/3 rounded" />
+          </div>
+        </div>
       </div>
     );
   }

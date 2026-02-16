@@ -39,25 +39,10 @@ export default function VictoriesPage() {
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
       <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-8">
-          <Link href="/" className="text-3xl font-bold text-[#00aaff]">
-            demand
-          </Link>
-          <div className="space-x-4">
-            <Link href="/demands" className="text-[#a0a0a0] hover:text-[#00aaff]">
-              Browse Demands
-            </Link>
-            <Link href="/dashboard" className="text-[#a0a0a0] hover:text-[#00aaff]">
-              Dashboard
-            </Link>
-          </div>
-        </div>
-
         {/* Hero */}
-        <div className="text-center mb-12">
-          <div className="text-7xl mb-4">🏆</div>
-          <h1 className="text-5xl font-bold text-white mb-4">Victory Showcase</h1>
+        <div className="text-center mb-12 animate-fade-in">
+          <div className="text-5xl sm:text-7xl mb-4">🏆</div>
+          <h1 className="text-3xl sm:text-5xl font-bold text-white mb-4">Victory Showcase</h1>
           <p className="text-xl text-[#a0a0a0] max-w-2xl mx-auto">
             Demands that won. People spoke, companies listened, change happened.
           </p>
@@ -89,9 +74,15 @@ export default function VictoriesPage() {
 
         {/* Victories List */}
         {loading ? (
-          <div className="text-center py-12">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#22c55e]"></div>
-            <p className="mt-4 text-[#666666]">Loading victories...</p>
+          <div className="space-y-6">
+            {[1, 2, 3].map(i => (
+              <div key={i} className="bg-[#1a1a1a] border border-[#1e1e1e] rounded-xl p-8 border-l-4 border-l-[#222222]">
+                <div className="skeleton h-7 w-3/4 rounded mb-3" />
+                <div className="skeleton h-4 w-1/4 rounded mb-4" />
+                <div className="skeleton h-4 w-full rounded mb-2" />
+                <div className="skeleton h-4 w-2/3 rounded" />
+              </div>
+            ))}
           </div>
         ) : victories.length === 0 ? (
           <div className="bg-[#1a1a1a] rounded-xl p-12 text-center border border-[#1e1e1e]">
@@ -113,7 +104,7 @@ export default function VictoriesPage() {
               <Link
                 key={victory.id}
                 href={`/demands/${victory.id}`}
-                className="bg-[#1a1a1a] p-8 rounded-xl border border-[#1e1e1e] hover:border-[#22c55e] transition border-l-4 border-l-[#22c55e]"
+                className="bg-[#1a1a1a] p-4 sm:p-8 rounded-xl border border-[#1e1e1e] hover:border-[#22c55e] transition border-l-4 border-l-[#22c55e] card-hover"
               >
                 <div className="flex justify-between items-start mb-4">
                   <div className="flex-1">
@@ -137,27 +128,27 @@ export default function VictoriesPage() {
                   <p className="text-white">{victory.successCriteria}</p>
                 </div>
 
-                <div className="flex items-center justify-between pt-4 border-t border-[#222222]">
-                  <div className="flex items-center gap-6 text-sm">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pt-4 border-t border-[#222222]">
+                  <div className="flex items-center gap-4 text-sm flex-wrap">
                     <div className="flex items-center gap-2">
-                      <span className="text-2xl font-bold text-[#22c55e]">
-                        {victory.coSignCount || 0}
+                      <span className="text-xl font-bold text-[#22c55e]">
+                        {(victory.coSignCount || 0).toLocaleString()}
                       </span>
-                      <span className="text-[#666666]">co-signers supported this</span>
+                      <span className="text-[#666666]">co-signers</span>
                     </div>
                     <div className="text-[#a0a0a0]">
                       By <span className="font-semibold">{victory.creatorName}</span>
                     </div>
                   </div>
-                  <div className="text-sm text-[#666666]">
-                    Won on{' '}
+                  <div className="text-xs text-[#666666]">
+                    Won{' '}
                     {victory.updatedAt
                       ? new Date(victory.updatedAt).toLocaleDateString('en-US', {
                           year: 'numeric',
                           month: 'long',
                           day: 'numeric',
                         })
-                      : 'Unknown'}
+                      : ''}
                   </div>
                 </div>
               </Link>
