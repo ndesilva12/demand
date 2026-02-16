@@ -82,22 +82,22 @@ export default function DashboardPage() {
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
-          <Link href="/" className="text-3xl font-bold text-purple-600">
+          <Link href="/" className="text-3xl font-bold text-[#00aaff]">
             Demand
           </Link>
           <div className="flex items-center gap-4">
-            <Link href="/demands" className="text-gray-700 hover:text-purple-600">
+            <Link href="/demands" className="text-gray-300 hover:text-[#00aaff]">
               Browse Demands
             </Link>
             <Link
               href="/create"
-              className="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition"
+              className="bg-[#00aaff] text-white px-6 py-2 rounded-lg hover:bg-[#0088cc] transition"
             >
               Create Demand
             </Link>
             <button
               onClick={handleSignOut}
-              className="text-gray-700 hover:text-red-600"
+              className="text-gray-300 hover:text-red-600"
             >
               Sign Out
             </button>
@@ -106,45 +106,45 @@ export default function DashboardPage() {
 
         <div className="max-w-6xl mx-auto">
           <div className="mb-8">
-            <h1 className="text-4xl font-bold text-gray-900 mb-2">Dashboard</h1>
-            <p className="text-gray-600">Welcome back, {user.email}</p>
+            <h1 className="text-4xl font-bold text-gray-100 mb-2">Dashboard</h1>
+            <p className="text-gray-400">Welcome back, {user.email}</p>
           </div>
 
           {/* Stats */}
           <div className="grid md:grid-cols-3 gap-6 mb-12">
-            <div className="bg-white p-6 rounded-xl shadow-md">
-              <div className="text-3xl font-bold text-purple-600">
+            <div className="bg-[#1a1a1a] p-6 rounded-xl shadow-md">
+              <div className="text-3xl font-bold text-[#00aaff]">
                 {myDemands.length}
               </div>
-              <div className="text-gray-600 mt-1">Demands Created</div>
+              <div className="text-gray-400 mt-1">Demands Created</div>
             </div>
-            <div className="bg-white p-6 rounded-xl shadow-md">
-              <div className="text-3xl font-bold text-purple-600">
+            <div className="bg-[#1a1a1a] p-6 rounded-xl shadow-md">
+              <div className="text-3xl font-bold text-[#00aaff]">
                 {coSignedDemands.length}
               </div>
-              <div className="text-gray-600 mt-1">Demands Co-Signed</div>
+              <div className="text-gray-400 mt-1">Demands Co-Signed</div>
             </div>
-            <div className="bg-white p-6 rounded-xl shadow-md">
+            <div className="bg-[#1a1a1a] p-6 rounded-xl shadow-md">
               <div className="text-3xl font-bold text-green-600">
                 {myDemands.filter((d) => d.status === 'met').length}
               </div>
-              <div className="text-gray-600 mt-1">Demands Won</div>
+              <div className="text-gray-400 mt-1">Demands Won</div>
             </div>
           </div>
 
           {/* My Demands */}
           <div className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">My Demands</h2>
+            <h2 className="text-2xl font-bold text-gray-100 mb-6">My Demands</h2>
             {loading ? (
               <div className="text-center py-8">
                 <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
               </div>
             ) : myDemands.length === 0 ? (
-              <div className="bg-white p-8 rounded-xl shadow-md text-center">
-                <p className="text-gray-600 mb-4">You haven&apos;t created any demands yet.</p>
+              <div className="bg-[#1a1a1a] p-8 rounded-xl shadow-md text-center">
+                <p className="text-gray-400 mb-4">You haven&apos;t created any demands yet.</p>
                 <Link
                   href="/create"
-                  className="inline-block bg-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-700 transition"
+                  className="inline-block bg-[#00aaff] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#0088cc] transition"
                 >
                   Create Your First Demand
                 </Link>
@@ -155,18 +155,18 @@ export default function DashboardPage() {
                   <Link
                     key={demand.id}
                     href={`/demands/${demand.id}`}
-                    className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition block"
+                    className="bg-[#1a1a1a] p-6 rounded-xl shadow-md hover:shadow-lg transition block"
                   >
                     <div className="flex justify-between items-start">
                       <div className="flex-1">
-                        <h3 className="text-xl font-bold text-gray-900 mb-2">
+                        <h3 className="text-xl font-bold text-gray-100 mb-2">
                           {demand.title}
                         </h3>
                         <p className="text-sm text-gray-500 mb-3">
                           Target: {demand.targetCompany}
                         </p>
-                        <div className="flex items-center gap-4 text-sm text-gray-600">
-                          <span className="font-semibold text-purple-600">
+                        <div className="flex items-center gap-4 text-sm text-gray-400">
+                          <span className="font-semibold text-[#00aaff]">
                             {demand.coSignCount || 0} co-signers
                           </span>
                           <span>
@@ -182,7 +182,7 @@ export default function DashboardPage() {
                             ? 'bg-blue-100 text-blue-700'
                             : demand.status === 'met'
                             ? 'bg-green-100 text-green-700'
-                            : 'bg-gray-100 text-gray-700'
+                            : 'bg-[#1e1e1e] text-gray-300'
                         }`}
                       >
                         {demand.status === 'active'
@@ -200,19 +200,19 @@ export default function DashboardPage() {
 
           {/* Co-Signed Demands */}
           <div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Demands I Support</h2>
+            <h2 className="text-2xl font-bold text-gray-100 mb-6">Demands I Support</h2>
             {loading ? (
               <div className="text-center py-8">
                 <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
               </div>
             ) : coSignedDemands.length === 0 ? (
-              <div className="bg-white p-8 rounded-xl shadow-md text-center">
-                <p className="text-gray-600 mb-4">
+              <div className="bg-[#1a1a1a] p-8 rounded-xl shadow-md text-center">
+                <p className="text-gray-400 mb-4">
                   You haven&apos;t co-signed any demands yet.
                 </p>
                 <Link
                   href="/demands"
-                  className="inline-block bg-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-700 transition"
+                  className="inline-block bg-[#00aaff] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#0088cc] transition"
                 >
                   Browse Demands
                 </Link>
@@ -223,18 +223,18 @@ export default function DashboardPage() {
                   <Link
                     key={demand.id}
                     href={`/demands/${demand.id}`}
-                    className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition block"
+                    className="bg-[#1a1a1a] p-6 rounded-xl shadow-md hover:shadow-lg transition block"
                   >
                     <div className="flex justify-between items-start">
                       <div className="flex-1">
-                        <h3 className="text-xl font-bold text-gray-900 mb-2">
+                        <h3 className="text-xl font-bold text-gray-100 mb-2">
                           {demand.title}
                         </h3>
                         <p className="text-sm text-gray-500 mb-3">
                           Target: {demand.targetCompany} • By {demand.creatorName}
                         </p>
-                        <div className="flex items-center gap-4 text-sm text-gray-600">
-                          <span className="font-semibold text-purple-600">
+                        <div className="flex items-center gap-4 text-sm text-gray-400">
+                          <span className="font-semibold text-[#00aaff]">
                             {demand.coSignCount || 0} co-signers
                           </span>
                         </div>
@@ -245,7 +245,7 @@ export default function DashboardPage() {
                             ? 'bg-blue-100 text-blue-700'
                             : demand.status === 'met'
                             ? 'bg-green-100 text-green-700'
-                            : 'bg-gray-100 text-gray-700'
+                            : 'bg-[#1e1e1e] text-gray-300'
                         }`}
                       >
                         {demand.status === 'active'

@@ -60,25 +60,25 @@ export default function DemandsPage() {
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <div>
-            <Link href="/" className="text-3xl font-bold text-purple-600">
+            <Link href="/" className="text-3xl font-bold text-[#00aaff]">
               Demand
             </Link>
           </div>
           <div className="space-x-4">
-            <Link href="/dashboard" className="text-gray-700 hover:text-purple-600">
+            <Link href="/dashboard" className="text-gray-300 hover:text-[#00aaff]">
               Dashboard
             </Link>
             <Link
               href="/create"
-              className="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition"
+              className="bg-[#00aaff] text-white px-6 py-2 rounded-lg hover:bg-[#0088cc] transition"
             >
               Create Demand
             </Link>
           </div>
         </div>
 
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">Browse Demands</h1>
-        <p className="text-gray-600 mb-8">
+        <h1 className="text-4xl font-bold text-gray-100 mb-4">Browse Demands</h1>
+        <p className="text-gray-400 mb-8">
           Explore active demands and co-sign those you support.
         </p>
 
@@ -89,7 +89,7 @@ export default function DemandsPage() {
             placeholder="Search demands by title, company, or description..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full px-6 py-3 border-2 border-gray-200 rounded-lg focus:border-purple-500 focus:outline-none transition text-lg"
+            className="w-full px-6 py-3 border-2 border-gray-800 rounded-lg focus:border-purple-500 focus:outline-none transition text-lg"
           />
         </div>
 
@@ -99,8 +99,8 @@ export default function DemandsPage() {
             onClick={() => setFilter('all')}
             className={`px-6 py-2 rounded-lg font-semibold transition ${
               filter === 'all'
-                ? 'bg-purple-600 text-white'
-                : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
+                ? 'bg-[#00aaff] text-white'
+                : 'bg-[#1a1a1a] text-gray-300 hover:bg-[#0a0a0a] border border-gray-700'
             }`}
           >
             All
@@ -109,8 +109,8 @@ export default function DemandsPage() {
             onClick={() => setFilter('active')}
             className={`px-6 py-2 rounded-lg font-semibold transition ${
               filter === 'active'
-                ? 'bg-purple-600 text-white'
-                : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
+                ? 'bg-[#00aaff] text-white'
+                : 'bg-[#1a1a1a] text-gray-300 hover:bg-[#0a0a0a] border border-gray-700'
             }`}
           >
             Active
@@ -119,8 +119,8 @@ export default function DemandsPage() {
             onClick={() => setFilter('met')}
             className={`px-6 py-2 rounded-lg font-semibold transition ${
               filter === 'met'
-                ? 'bg-purple-600 text-white'
-                : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
+                ? 'bg-[#00aaff] text-white'
+                : 'bg-[#1a1a1a] text-gray-300 hover:bg-[#0a0a0a] border border-gray-700'
             }`}
           >
             Won
@@ -131,16 +131,16 @@ export default function DemandsPage() {
         {loading ? (
           <div className="text-center py-12">
             <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
-            <p className="mt-4 text-gray-600">Loading demands...</p>
+            <p className="mt-4 text-gray-400">Loading demands...</p>
           </div>
         ) : filteredDemands.length === 0 ? (
-          <div className="bg-white rounded-xl p-12 text-center shadow-md">
+          <div className="bg-[#1a1a1a] rounded-xl p-12 text-center shadow-md">
             <div className="text-6xl mb-4">📭</div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-2">No demands yet</h3>
-            <p className="text-gray-600 mb-6">Be the first to create a demand!</p>
+            <h3 className="text-2xl font-bold text-gray-100 mb-2">No demands yet</h3>
+            <p className="text-gray-400 mb-6">Be the first to create a demand!</p>
             <Link
               href="/create"
-              className="inline-block bg-purple-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-purple-700 transition"
+              className="inline-block bg-[#00aaff] text-white px-8 py-3 rounded-lg font-semibold hover:bg-[#0088cc] transition"
             >
               Create First Demand
             </Link>
@@ -151,18 +151,18 @@ export default function DemandsPage() {
               <Link
                 key={demand.id}
                 href={`/demands/${demand.id}`}
-                className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition block"
+                className="bg-[#1a1a1a] p-6 rounded-xl shadow-md hover:shadow-lg transition block"
               >
                 <div className="flex justify-between items-start mb-3">
                   <div className="flex-1">
-                    <h3 className="text-xl font-bold text-gray-900 mb-2">
+                    <h3 className="text-xl font-bold text-gray-100 mb-2">
                       {demand.title}
                     </h3>
                     <p className="text-sm text-gray-500">
                       Target:{' '}
                       <Link
                         href={`/companies/${encodeURIComponent(demand.targetCompany)}`}
-                        className="font-semibold text-purple-600 hover:underline"
+                        className="font-semibold text-[#00aaff] hover:underline"
                         onClick={(e) => e.stopPropagation()}
                       >
                         {demand.targetCompany}
@@ -175,7 +175,7 @@ export default function DemandsPage() {
                         ? 'bg-blue-100 text-blue-700'
                         : demand.status === 'met'
                         ? 'bg-green-100 text-green-700'
-                        : 'bg-gray-100 text-gray-700'
+                        : 'bg-[#1e1e1e] text-gray-300'
                     }`}
                   >
                     {demand.status === 'active'
@@ -186,12 +186,12 @@ export default function DemandsPage() {
                   </div>
                 </div>
 
-                <p className="text-gray-600 mb-4 line-clamp-2">{demand.description}</p>
+                <p className="text-gray-400 mb-4 line-clamp-2">{demand.description}</p>
 
                 <div className="flex items-center justify-between pt-4 border-t border-gray-100">
                   <div className="flex items-center gap-6 text-sm text-gray-500">
                     <div>
-                      <span className="font-semibold text-purple-600">
+                      <span className="font-semibold text-[#00aaff]">
                         {demand.coSignCount || 0}
                       </span>{' '}
                       co-signers

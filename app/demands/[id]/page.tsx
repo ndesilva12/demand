@@ -117,15 +117,15 @@ export default function DemandDetailPage() {
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
-          <Link href="/" className="text-3xl font-bold text-purple-600">
+          <Link href="/" className="text-3xl font-bold text-[#00aaff]">
             Demand
           </Link>
           <div className="space-x-4">
-            <Link href="/demands" className="text-gray-700 hover:text-purple-600">
+            <Link href="/demands" className="text-gray-300 hover:text-[#00aaff]">
               ← Back to Demands
             </Link>
             {user && (
-              <Link href="/dashboard" className="text-gray-700 hover:text-purple-600">
+              <Link href="/dashboard" className="text-gray-300 hover:text-[#00aaff]">
                 Dashboard
               </Link>
             )}
@@ -141,7 +141,7 @@ export default function DemandDetailPage() {
                   ? 'bg-blue-100 text-blue-700'
                   : demand.status === 'met'
                   ? 'bg-green-100 text-green-700'
-                  : 'bg-gray-100 text-gray-700'
+                  : 'bg-[#1e1e1e] text-gray-300'
               }`}
             >
               {demand.status === 'active'
@@ -153,9 +153,9 @@ export default function DemandDetailPage() {
           </div>
 
           {/* Title & Company */}
-          <h1 className="text-5xl font-bold text-gray-900 mb-4">{demand.title}</h1>
-          <p className="text-xl text-gray-600 mb-8">
-            Target: <span className="font-semibold text-purple-600">{demand.targetCompany}</span>
+          <h1 className="text-5xl font-bold text-gray-100 mb-4">{demand.title}</h1>
+          <p className="text-xl text-gray-400 mb-8">
+            Target: <span className="font-semibold text-[#00aaff]">{demand.targetCompany}</span>
           </p>
 
           {/* Co-Sign Button */}
@@ -165,8 +165,8 @@ export default function DemandDetailPage() {
               disabled={coSigning || !user}
               className={`mb-8 px-8 py-4 rounded-lg font-semibold text-lg transition disabled:opacity-50 disabled:cursor-not-allowed ${
                 hasCoSigned
-                  ? 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                  : 'bg-purple-600 text-white hover:bg-purple-700'
+                  ? 'bg-gray-200 text-gray-300 hover:bg-gray-300'
+                  : 'bg-[#00aaff] text-white hover:bg-[#0088cc]'
               }`}
             >
               {coSigning
@@ -178,45 +178,45 @@ export default function DemandDetailPage() {
           )}
 
           {/* Stats */}
-          <div className="bg-white p-6 rounded-xl shadow-md mb-8">
+          <div className="bg-[#1a1a1a] p-6 rounded-xl shadow-md mb-8">
             <div className="grid grid-cols-3 gap-6 text-center">
               <div>
-                <div className="text-4xl font-bold text-purple-600">
+                <div className="text-4xl font-bold text-[#00aaff]">
                   {demand.coSignCount || 0}
                 </div>
-                <div className="text-gray-600 mt-1">Co-Signers</div>
+                <div className="text-gray-400 mt-1">Co-Signers</div>
               </div>
               <div>
-                <div className="text-4xl font-bold text-gray-900">
+                <div className="text-4xl font-bold text-gray-100">
                   {demand.createdAt
                     ? Math.floor(
                         (Date.now() - demand.createdAt.getTime()) / (1000 * 60 * 60 * 24)
                       )
                     : 0}
                 </div>
-                <div className="text-gray-600 mt-1">Days Active</div>
+                <div className="text-gray-400 mt-1">Days Active</div>
               </div>
               <div>
-                <div className="text-4xl font-bold text-gray-900">
+                <div className="text-4xl font-bold text-gray-100">
                   {demand.status === 'active' ? '🔥' : demand.status === 'met' ? '✅' : '🔒'}
                 </div>
-                <div className="text-gray-600 mt-1">Status</div>
+                <div className="text-gray-400 mt-1">Status</div>
               </div>
             </div>
           </div>
 
           {/* Description */}
-          <div className="bg-white p-8 rounded-xl shadow-md mb-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">The Demand</h2>
-            <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">
+          <div className="bg-[#1a1a1a] p-8 rounded-xl shadow-md mb-8">
+            <h2 className="text-2xl font-bold text-gray-100 mb-4">The Demand</h2>
+            <p className="text-gray-300 whitespace-pre-wrap leading-relaxed">
               {demand.description}
             </p>
           </div>
 
           {/* Success Criteria */}
-          <div className="bg-white p-8 rounded-xl shadow-md mb-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Success Criteria</h2>
-            <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">
+          <div className="bg-[#1a1a1a] p-8 rounded-xl shadow-md mb-8">
+            <h2 className="text-2xl font-bold text-gray-100 mb-4">Success Criteria</h2>
+            <p className="text-gray-300 whitespace-pre-wrap leading-relaxed">
               {demand.successCriteria}
             </p>
           </div>
@@ -228,15 +228,15 @@ export default function DemandDetailPage() {
           />
 
           {/* Creator Info */}
-          <div className="bg-white p-6 rounded-xl shadow-md mb-8">
+          <div className="bg-[#1a1a1a] p-6 rounded-xl shadow-md mb-8">
             <div className="flex justify-between items-center">
               <div>
                 <p className="text-sm text-gray-500 mb-1">Created by</p>
-                <p className="text-lg font-semibold text-gray-900">{demand.creatorName}</p>
+                <p className="text-lg font-semibold text-gray-100">{demand.creatorName}</p>
               </div>
               <div className="text-right">
                 <p className="text-sm text-gray-500 mb-1">Created on</p>
-                <p className="text-lg font-semibold text-gray-900">
+                <p className="text-lg font-semibold text-gray-100">
                   {demand.createdAt
                     ? new Date(demand.createdAt).toLocaleDateString('en-US', {
                         year: 'numeric',
@@ -250,7 +250,7 @@ export default function DemandDetailPage() {
           </div>
 
           {/* Message Board */}
-          <div className="bg-white p-8 rounded-xl shadow-md">
+          <div className="bg-[#1a1a1a] p-8 rounded-xl shadow-md">
             <MessageBoard demandId={demandId} />
           </div>
         </div>

@@ -50,14 +50,14 @@ export default function CompanyPage() {
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
-          <Link href="/" className="text-3xl font-bold text-purple-600">
+          <Link href="/" className="text-3xl font-bold text-[#00aaff]">
             Demand
           </Link>
           <div className="space-x-4">
-            <Link href="/demands" className="text-gray-700 hover:text-purple-600">
+            <Link href="/demands" className="text-gray-300 hover:text-[#00aaff]">
               Browse All
             </Link>
-            <Link href="/dashboard" className="text-gray-700 hover:text-purple-600">
+            <Link href="/dashboard" className="text-gray-300 hover:text-[#00aaff]">
               Dashboard
             </Link>
           </div>
@@ -70,29 +70,29 @@ export default function CompanyPage() {
               {companyName.charAt(0)}
             </div>
             <div>
-              <h1 className="text-4xl font-bold text-gray-900">{companyName}</h1>
-              <p className="text-gray-600 mt-1">All demands targeting this company</p>
+              <h1 className="text-4xl font-bold text-gray-100">{companyName}</h1>
+              <p className="text-gray-400 mt-1">All demands targeting this company</p>
             </div>
           </div>
 
           {/* Stats */}
           {!loading && demands.length > 0 && (
             <div className="grid grid-cols-4 gap-6 mt-8">
-              <div className="bg-white p-6 rounded-xl shadow-md text-center">
-                <div className="text-3xl font-bold text-purple-600">{demands.length}</div>
-                <div className="text-gray-600 mt-1">Total Demands</div>
+              <div className="bg-[#1a1a1a] p-6 rounded-xl shadow-md text-center">
+                <div className="text-3xl font-bold text-[#00aaff]">{demands.length}</div>
+                <div className="text-gray-400 mt-1">Total Demands</div>
               </div>
-              <div className="bg-white p-6 rounded-xl shadow-md text-center">
+              <div className="bg-[#1a1a1a] p-6 rounded-xl shadow-md text-center">
                 <div className="text-3xl font-bold text-blue-600">{activeDemands.length}</div>
-                <div className="text-gray-600 mt-1">Active</div>
+                <div className="text-gray-400 mt-1">Active</div>
               </div>
-              <div className="bg-white p-6 rounded-xl shadow-md text-center">
+              <div className="bg-[#1a1a1a] p-6 rounded-xl shadow-md text-center">
                 <div className="text-3xl font-bold text-green-600">{wonDemands.length}</div>
-                <div className="text-gray-600 mt-1">Won</div>
+                <div className="text-gray-400 mt-1">Won</div>
               </div>
-              <div className="bg-white p-6 rounded-xl shadow-md text-center">
-                <div className="text-3xl font-bold text-gray-900">{totalCoSigners}</div>
-                <div className="text-gray-600 mt-1">Co-Signers</div>
+              <div className="bg-[#1a1a1a] p-6 rounded-xl shadow-md text-center">
+                <div className="text-3xl font-bold text-gray-100">{totalCoSigners}</div>
+                <div className="text-gray-400 mt-1">Co-Signers</div>
               </div>
             </div>
           )}
@@ -102,18 +102,18 @@ export default function CompanyPage() {
         {loading ? (
           <div className="text-center py-12">
             <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
-            <p className="mt-4 text-gray-600">Loading demands...</p>
+            <p className="mt-4 text-gray-400">Loading demands...</p>
           </div>
         ) : demands.length === 0 ? (
-          <div className="bg-white rounded-xl p-12 text-center shadow-md">
+          <div className="bg-[#1a1a1a] rounded-xl p-12 text-center shadow-md">
             <div className="text-6xl mb-4">🎯</div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-2">
+            <h3 className="text-2xl font-bold text-gray-100 mb-2">
               No demands for {companyName} yet
             </h3>
-            <p className="text-gray-600 mb-6">Be the first to create one!</p>
+            <p className="text-gray-400 mb-6">Be the first to create one!</p>
             <Link
               href="/create"
-              className="inline-block bg-purple-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-purple-700 transition"
+              className="inline-block bg-[#00aaff] text-white px-8 py-3 rounded-lg font-semibold hover:bg-[#0088cc] transition"
             >
               Create Demand
             </Link>
@@ -124,11 +124,11 @@ export default function CompanyPage() {
               <Link
                 key={demand.id}
                 href={`/demands/${demand.id}`}
-                className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition block"
+                className="bg-[#1a1a1a] p-6 rounded-xl shadow-md hover:shadow-lg transition block"
               >
                 <div className="flex justify-between items-start mb-3">
                   <div className="flex-1">
-                    <h3 className="text-xl font-bold text-gray-900 mb-2">{demand.title}</h3>
+                    <h3 className="text-xl font-bold text-gray-100 mb-2">{demand.title}</h3>
                   </div>
                   <div
                     className={`px-4 py-1 rounded-full text-sm font-semibold ${
@@ -136,7 +136,7 @@ export default function CompanyPage() {
                         ? 'bg-blue-100 text-blue-700'
                         : demand.status === 'met'
                         ? 'bg-green-100 text-green-700'
-                        : 'bg-gray-100 text-gray-700'
+                        : 'bg-[#1e1e1e] text-gray-300'
                     }`}
                   >
                     {demand.status === 'active'
@@ -147,12 +147,12 @@ export default function CompanyPage() {
                   </div>
                 </div>
 
-                <p className="text-gray-600 mb-4 line-clamp-2">{demand.description}</p>
+                <p className="text-gray-400 mb-4 line-clamp-2">{demand.description}</p>
 
                 <div className="flex items-center justify-between pt-4 border-t border-gray-100">
                   <div className="flex items-center gap-6 text-sm text-gray-500">
                     <div>
-                      <span className="font-semibold text-purple-600">
+                      <span className="font-semibold text-[#00aaff]">
                         {demand.coSignCount || 0}
                       </span>{' '}
                       co-signers

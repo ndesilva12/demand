@@ -211,7 +211,7 @@ export default function SeedDemoPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 p-8">
+    <div className="min-h-screen bg-[#0a0a0a] p-8">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-3xl font-bold text-[#00aaff] mb-4">Seed Demo Data</h1>
         <p className="text-gray-300 mb-8">

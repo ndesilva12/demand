@@ -33,7 +33,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 flex items-center justify-center px-4 animate-fadeIn">
+    <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center px-4 animate-fadeIn">
       <div className="bg-gray-800 p-8 rounded-2xl shadow-2xl max-w-md w-full border border-gray-700 hover-lift">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-[#00aaff]">Welcome Back</h1>
