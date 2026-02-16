@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
+import WelcomeModal from '@/components/WelcomeModal';
 
 // Avatar component - generates colored initials
 export function Avatar({ name, size = 32 }: { name: string; size?: number }) {
@@ -88,6 +89,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
   const navLinks = [
     { href: '/demands', label: 'Demands', icon: '📋' },
+    { href: '/explore', label: 'Explore', icon: '🔍' },
     { href: '/pressure-board', label: 'Pressure Board', icon: '📊' },
     { href: '/coalitions', label: 'Coalitions', icon: '🤝' },
     { href: '/victories', label: 'Victories', icon: '🏆' },
@@ -140,6 +142,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <div className="hidden md:flex items-center gap-3">
               {user ? (
                 <>
+                  <Link
+                    href="/notifications"
+                    className="relative p-2 rounded-lg hover:bg-[#1a1a1a] transition-colors text-[#a0a0a0] hover:text-white"
+                    title="Notifications"
+                  >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                    <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-[#ef4444] rounded-full text-[10px] font-bold flex items-center justify-center text-white">3</span>
+                  </Link>
                   <Link
                     href="/create"
                     className="bg-[#00aaff] hover:bg-[#0088cc] text-white px-4 py-2 rounded-lg text-sm font-medium transition-all hover:shadow-lg hover:shadow-[#00aaff]/20"
@@ -270,6 +280,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           ))}
         </div>
       </nav>
+
+      {/* Welcome Modal */}
+      <WelcomeModal />
 
       {/* Floating Create Button (desktop) */}
       <Link

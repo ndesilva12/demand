@@ -17,6 +17,88 @@ import DemandAnalytics from '@/components/DemandAnalytics';
 import CorporateResponseSection from '@/components/CorporateResponseSection';
 import DemandForkButton from '@/components/DemandForkButton';
 import WhatIfCalculator from '@/components/WhatIfCalculator';
+import ShareButtons from '@/components/ShareButtons';
+
+// Timeline component
+function DemandTimeline({ demand }: { demand: Demand }) {
+  const events = [
+    { date: demand.createdAt, label: 'Demand Created', icon: '🎯', desc: `${demand.creatorName} created this demand` },
+    ...(demand.coSignCount >= 10 ? [{ date: demand.createdAt ? new Date(demand.createdAt.getTime() + 86400000) : new Date(), label: '10 Co-signers', icon: '✊', desc: 'First supporters joined the cause' }] : []),
+    ...(demand.coSignCount >= 100 ? [{ date: demand.createdAt ? new Date(demand.createdAt.getTime() + 86400000 * 3) : new Date(), label: '100 Co-signers', icon: '📢', desc: 'Demand gaining traction' }] : []),
+    ...(demand.coSignCount >= 1000 ? [{ date: demand.createdAt ? new Date(demand.createdAt.getTime() + 86400000 * 7) : new Date(), label: 'Campaign Stage', icon: '🔥', desc: 'Escalated to campaign — company notified' }] : []),
+    ...(demand.status === 'met' ? [{ date: demand.updatedAt || new Date(), label: 'Victory!', icon: '🏆', desc: 'Demand was met — success criteria fulfilled' }] : []),
+  ];
+
+  return (
+    <div className="bg-[#1a1a1a] border border-[#1e1e1e] rounded-xl p-6 mb-6">
+      <h2 className="text-sm font-medium text-[#666666] uppercase tracking-wider mb-4">Timeline</h2>
+      <div className="space-y-0">
+        {events.map((e, i) => (
+          <div key={i} className="flex gap-4">
+            <div className="flex flex-col items-center">
+              <div className="w-8 h-8 rounded-full bg-[#222222] flex items-center justify-center text-sm">{e.icon}</div>
+              {i < events.length - 1 && <div className="w-px h-8 bg-[#222222]" />}
+            </div>
+            <div className="pb-6">
+              <div className="font-semibold text-white text-sm">{e.label}</div>
+              <div className="text-xs text-[#666666]">{e.desc}</div>
+              <div className="text-xs text-[#444444] mt-0.5">
+                {e.date ? new Date(e.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : ''}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// Co-signer wall
+function CoSignerWall({ count }: { count: number }) {
+  const mockNames = ['Alex R.', 'Jordan T.', 'Sam K.', 'Casey M.', 'Morgan L.', 'Riley P.', 'Quinn W.', 'Avery B.', 'Taylor S.', 'Jamie D.', 'Drew F.', 'Blake H.'];
+  const colors = ['#00aaff', '#f59e0b', '#22c55e', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316'];
+  const shown = mockNames.slice(0, Math.min(12, count));
+
+  return (
+    <div className="bg-[#1a1a1a] border border-[#1e1e1e] rounded-xl p-6 mb-6">
+      <h2 className="text-sm font-medium text-[#666666] uppercase tracking-wider mb-4">Recent Co-signers</h2>
+      <div className="flex flex-wrap gap-3">
+        {shown.map((name, i) => (
+          <div key={i} className="flex items-center gap-2 bg-[#222222] rounded-full px-3 py-1.5">
+            <div className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold text-white" style={{ backgroundColor: colors[i % colors.length] }}>
+              {name.split(' ').map(n => n[0]).join('')}
+            </div>
+            <span className="text-xs text-[#a0a0a0]">{name}</span>
+          </div>
+        ))}
+        {count > 12 && (
+          <div className="flex items-center gap-2 bg-[#222222] rounded-full px-3 py-1.5">
+            <span className="text-xs text-[#00aaff] font-semibold">+{(count - 12).toLocaleString()} more</span>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// Share card preview
+function ShareCardPreview({ demand }: { demand: Demand }) {
+  return (
+    <div className="bg-[#1a1a1a] border border-[#1e1e1e] rounded-xl p-6 mb-6">
+      <h2 className="text-sm font-medium text-[#666666] uppercase tracking-wider mb-4">Share This Demand</h2>
+      <div className="bg-gradient-to-br from-[#0a0a0a] to-[#111111] border border-[#222222] rounded-xl p-6 mb-4">
+        <div className="text-xs text-[#00aaff] font-medium mb-2">demandchange.vercel.app</div>
+        <h3 className="font-bold text-white mb-2">{demand.title}</h3>
+        <p className="text-xs text-[#a0a0a0] line-clamp-2 mb-3">{demand.description}</p>
+        <div className="flex items-center gap-4 text-xs text-[#666666]">
+          <span>✊ {(demand.coSignCount || 0).toLocaleString()} co-signers</span>
+          <span>vs {demand.targetCompany}</span>
+        </div>
+      </div>
+      <ShareButtons title={demand.title} url={`https://demandchange.vercel.app/demands/${demand.id}`} />
+    </div>
+  );
+}
 
 export default function DemandDetailPage() {
   const params = useParams();
@@ -165,6 +247,15 @@ export default function DemandDetailPage() {
           <h2 className="text-sm font-medium text-[#00aaff] uppercase tracking-wider mb-3">Success Criteria</h2>
           <p className="text-white whitespace-pre-wrap leading-relaxed">{demand.successCriteria}</p>
         </div>
+
+        {/* Timeline */}
+        <DemandTimeline demand={demand} />
+
+        {/* Co-signer Wall */}
+        <CoSignerWall count={demand.coSignCount || 0} />
+
+        {/* Share Card */}
+        <ShareCardPreview demand={demand} />
 
         {/* Creator */}
         <div className="bg-[#1a1a1a] border border-[#1e1e1e] rounded-xl p-6 mb-6">
